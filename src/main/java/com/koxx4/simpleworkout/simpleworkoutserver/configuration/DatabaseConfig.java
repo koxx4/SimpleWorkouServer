@@ -17,7 +17,13 @@ public class DatabaseConfig {
 
     @Bean
     public DataSource dataSource() throws VaultKeyValueSecretException {
-        DatabaseCredentials databaseCredentials = vaultService.getDatabaseCredentials();
+
+        DatabaseCredentials databaseCredentials = null;
+        try{
+            databaseCredentials = vaultService.getDatabaseCredentials();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setUrl(String.format("jdbc:mariadb://%s:3306/%s",
