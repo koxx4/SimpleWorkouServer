@@ -21,11 +21,12 @@ jobs:
         uses: appleboy/ssh-action@v0.1.4
         env:
           INITIAL_VAULT_APPROLE_TOKEN: ${{ secrets.INITIAL_VAULT_APPROLE_TOKEN }}
+          TEST_VAR: test_variable_yo
         with:
           host: ${{ secrets.SSH_HOST_IP }}
           password: ${{ secrets.SSH_PASSWORD }}
           username: ${{ secrets.SSH_USERNAME }}
-          envs: INITIAL_VAULT_APPROLE_TOKEN
+          envs: INITIAL_VAULT_APPROLE_TOKEN,TEST_VAR
           script: |
             echo 'Connected to the deployment server'
             mkdir GithubDeploy
