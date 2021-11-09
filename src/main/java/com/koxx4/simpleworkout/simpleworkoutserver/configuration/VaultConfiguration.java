@@ -18,12 +18,8 @@ public class VaultConfiguration extends AbstractVaultConfiguration {
 
     @Value("${spring.cloud.vault.uri}")
     URI vaultApiUri;
+    @Value("#{systemEnvironment['INITIAL_VAULT_APPROLE_TOKEN']}")
     String appRoleInitialToken;
-
-    public VaultConfiguration() {
-        super();
-        this.appRoleInitialToken = System.getenv("INITIAL_VAULT_APPROLE_TOKEN");
-    }
 
     @Override
     public VaultEndpoint vaultEndpoint(){
