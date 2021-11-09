@@ -20,7 +20,9 @@ public class DatabaseConfig {
         DatabaseCredentials databaseCredentials = vaultService.getDatabaseCredentials();
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-		dataSource.setUrl("jdbc:mysql://localhost:3306/" + databaseCredentials.getDbName());
+		dataSource.setUrl(String.format("jdbc:mariadb://%s:3306/%s",
+                databaseCredentials.getAddress(), databaseCredentials.getDbName()));
+        dataSource.setDriverClassName("org.mariadb.jdbc.Driver");
 		dataSource.setUsername(databaseCredentials.getUsername());
 		dataSource.setPassword(databaseCredentials.getPassword());
 

@@ -36,8 +36,9 @@ public class VaultService {
 
             DatabaseCredentials databaseCredentials = new DatabaseCredentials();
             databaseCredentials.setDbName(String.valueOf(versionedSecret.getData().get("db_name")));
-            databaseCredentials.setDbName(String.valueOf(versionedSecret.getData().get("db_username")));
-            databaseCredentials.setDbName(String.valueOf(versionedSecret.getData().get("db_password")));
+            databaseCredentials.setUsername(String.valueOf(versionedSecret.getData().get("db_username")));
+            databaseCredentials.setPassword(String.valueOf(versionedSecret.getData().get("db_password")));
+            databaseCredentials.setAddress(String.valueOf(versionedSecret.getData().get("db_address")));
 
             return databaseCredentials;
     }

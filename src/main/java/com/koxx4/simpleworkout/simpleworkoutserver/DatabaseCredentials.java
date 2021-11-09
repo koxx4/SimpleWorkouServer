@@ -1,6 +1,7 @@
 package com.koxx4.simpleworkout.simpleworkoutserver;
 
 public class DatabaseCredentials {
+    private String address;
     private String dbName;
     private String username;
     private String password;
@@ -37,5 +38,13 @@ public class DatabaseCredentials {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
