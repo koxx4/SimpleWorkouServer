@@ -28,6 +28,8 @@ jobs:
             mkdir GithubDeploy
             cd GithubDeploy
             git clone https://github.com/koxx4/SimpleWorkouServer.git
+            cd SimpleWorkoutServer
+            git pull origin main
             echo 'Cloned production ready code onto the server'
             echo 'Building project with maven...'
-            #TODO
+            ./mvnw spring-boot:run
