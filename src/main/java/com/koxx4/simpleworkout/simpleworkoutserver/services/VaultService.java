@@ -17,12 +17,13 @@ import java.util.Map;
 @Component
 public class VaultService {
 
-    private VaultEndpoint vaultEndpoint;
-    private ClientAuthentication auth;
+    private final VaultEndpoint vaultEndpoint;
+    private final ClientAuthentication auth;
 
-    public VaultService(@Autowired VaultEndpoint endpoint,
-                        @Autowired ClientAuthentication auth) {
-
+    public VaultService(VaultEndpoint endpoint,
+                        ClientAuthentication auth) {
+        this.vaultEndpoint = endpoint;
+        this.auth = auth;
     }
 
     public DatabaseCredentials getDatabaseCredentials() throws VaultKeyValueSecretException {

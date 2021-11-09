@@ -36,5 +36,4 @@ public class VaultConfiguration extends AbstractVaultConfiguration {
                 .build();
         return new AppRoleAuthentication(options, restOperations());
     }
-
 }
