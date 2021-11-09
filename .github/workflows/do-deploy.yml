@@ -25,6 +25,8 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           script: |
             echo 'Connected to the deployment server'
+            echo 'Adding env variables...'
+            export INITIAL_VAULT_APPROLE_TOKEN={{ secrets.INITIAL_VAULT_APPROLE_TOKEN }}
             mkdir GithubDeploy
             cd GithubDeploy
             git clone https://github.com/koxx4/SimpleWorkoutServer.git
