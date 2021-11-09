@@ -17,9 +17,11 @@ import java.net.URI;
 public class VaultConfiguration extends AbstractVaultConfiguration {
 
     @Value("${spring.cloud.vault.uri}")
-    URI vaultApiUri;
+    private URI vaultApiUri;
     @Value("#{systemEnvironment['INITIAL_VAULT_APPROLE_TOKEN']}")
-    String appRoleInitialToken;
+    private String appRoleInitialToken;
+    @Value("#{systemEnvironment['TEST_VAR']}")
+    private String testVar;
 
     @Override
     public VaultEndpoint vaultEndpoint(){
@@ -28,6 +30,8 @@ public class VaultConfiguration extends AbstractVaultConfiguration {
 
     @Override
     public ClientAuthentication clientAuthentication(){
+        System.out.println("TEST ENV VAR: " + testVar);
+
         AppRoleAuthenticationOptions options = AppRoleAuthenticationOptions
                 .builder()
                 .appRole("simpleworkout-server-role")
