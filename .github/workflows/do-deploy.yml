@@ -27,7 +27,7 @@ jobs:
             echo 'Connected to the deployment server'
             mkdir GithubDeploy
             cd GithubDeploy
-            git clone git@github.com:koxx4/SimpleWorkouServer.git
+            git clone https://github.com/koxx4/SimpleWorkouServer.git
             echo 'Cloned production ready code onto the server'
             echo 'Building project with maven...'
             #TODO
