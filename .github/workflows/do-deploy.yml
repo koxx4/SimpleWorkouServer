@@ -18,12 +18,11 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Deploy to DigitalOcean
-        uses: appleboy/ssh-action@v0.1.2
+        uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.SSH_HOST_IP }}
-          KEY: $ {{ secrets.SSH_KEY }}
-          USERNAME: ${{ secrets.SSH_USERNAME }}
-          
+          password: ${{ secrets.SSH_PASSWORD }}
+          username: ${{ secrets.SSH_USERNAME }}
           script: |
             echo 'Connected to the deployment server'
             mkdir GithubDeploy
