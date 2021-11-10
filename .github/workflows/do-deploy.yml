@@ -29,6 +29,8 @@ jobs:
           envs: INITIAL_VAULT_APPROLE_TOKEN,TEST_VAR
           script: |
             echo 'Connected to the deployment server'
+            export INITIAL_VAULT_APPROLE_TOKEN=$INITIAL_VAULT_APPROLE_TOKEN
+            export TEST_VAR=$TEST_VAR
             mkdir GithubDeploy
             cd GithubDeploy
             git clone https://github.com/koxx4/SimpleWorkoutServer.git
