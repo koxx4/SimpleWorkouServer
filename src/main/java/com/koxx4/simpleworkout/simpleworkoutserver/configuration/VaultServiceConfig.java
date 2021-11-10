@@ -12,12 +12,13 @@ import org.springframework.vault.core.VaultTemplate;
 public class VaultServiceConfig {
 
     @Autowired
-    VaultConfiguration vaultConfiguration;
+    VaultEndpoint vaultEndpoint;
+    @Autowired
+    ClientAuthentication clientAuthentication;
 
     @Bean
     public VaultService vaultService(){
-        return new VaultService(vaultConfiguration.vaultEndpoint(),
-                vaultConfiguration.clientAuthentication());
+        return new VaultService(vaultEndpoint, clientAuthentication);
     }
 
 }
