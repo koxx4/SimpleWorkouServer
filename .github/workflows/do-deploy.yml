@@ -19,23 +19,15 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Deploy to DigitalOcean
         uses: appleboy/ssh-action@v0.1.4
-        env:
-          INITIAL_VAULT_APPROLE_TOKEN: ${{ secrets.INITIAL_VAULT_APPROLE_TOKEN }}
-          TEST_VAR: test_variable_yo
         with:
           host: ${{ secrets.SSH_HOST_IP }}
           password: ${{ secrets.SSH_PASSWORD }}
           username: ${{ secrets.SSH_USERNAME }}
-          envs: INITIAL_VAULT_APPROLE_TOKEN,TEST_VAR
           script: |
             echo 'Connected to the deployment server'
-            export INITIAL_VAULT_APPROLE_TOKEN=$INITIAL_VAULT_APPROLE_TOKEN
-            export TEST_VAR=$TEST_VAR
             mkdir GithubDeploy
             cd GithubDeploy
             git clone https://github.com/koxx4/SimpleWorkoutServer.git
             cd SimpleWorkoutServer
             git pull origin main
             echo 'Cloned production ready code onto the server'
-            echo 'Building project with maven...'
-            ./mvnw spring-boot:run
