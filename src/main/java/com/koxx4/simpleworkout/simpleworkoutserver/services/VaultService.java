@@ -4,7 +4,9 @@ import com.koxx4.simpleworkout.simpleworkoutserver.DatabaseCredentials;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.VaultKeyValueSecretException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.vault.authentication.ClientAuthentication;
 import org.springframework.vault.client.VaultEndpoint;
 import org.springframework.vault.core.VaultTemplate;
@@ -15,13 +17,14 @@ import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Component
+@DependsOn("vaultConfiguration")
 public class VaultService {
 
     private final VaultEndpoint vaultEndpoint;
     private final ClientAuthentication auth;
 
-    public VaultService(VaultEndpoint endpoint,
-                        ClientAuthentication auth) {
+    public VaultService(@Autowired VaultEndpoint endpoint,
+                        @Autowired ClientAuthentication auth) {
         this.vaultEndpoint = endpoint;
         this.auth = auth;
     }

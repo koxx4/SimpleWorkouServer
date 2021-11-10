@@ -6,7 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.logging.Logger;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.koxx4.simpleworkout.simpleworkoutserver.configuration"})
+        "com.koxx4.simpleworkout.simpleworkoutserver.configuration",
+        "com.koxx4.simpleworkout.simpleworkoutserver.services"})
 public class SimpleWorkoutServerApplication {
 
     public static void main(String[] args) {

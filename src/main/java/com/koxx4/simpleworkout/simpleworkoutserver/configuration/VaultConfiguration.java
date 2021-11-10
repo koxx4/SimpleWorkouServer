@@ -1,6 +1,7 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.vault.authentication.AppRoleAuthentication;
 import org.springframework.vault.authentication.AppRoleAuthenticationOptions;
@@ -20,18 +21,16 @@ public class VaultConfiguration extends AbstractVaultConfiguration {
     private URI vaultApiUri;
     @Value("#{systemEnvironment['INITIAL_VAULT_APPROLE_TOKEN']}")
     private String appRoleInitialToken;
-    @Value("#{systemEnvironment['TEST_VAR']}")
-    private String testVar;
 
+    @Bean
     @Override
     public VaultEndpoint vaultEndpoint(){
         return VaultEndpoint.from(vaultApiUri);
     }
 
+    @Bean
     @Override
     public ClientAuthentication clientAuthentication(){
-        System.out.println("TEST ENV VAR: " + testVar);
-
         AppRoleAuthenticationOptions options = AppRoleAuthenticationOptions
                 .builder()
                 .appRole("simpleworkout-server-role")
