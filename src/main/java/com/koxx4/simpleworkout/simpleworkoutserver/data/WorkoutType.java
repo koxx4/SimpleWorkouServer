@@ -4,5 +4,6 @@ public enum WorkoutType {
     RUNNING,
     CYCLING,
     HITCH_HIKING,
-    WALKING
+    WALKING,
+    OTHER
 }

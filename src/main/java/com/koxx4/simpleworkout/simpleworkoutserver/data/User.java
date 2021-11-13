@@ -11,28 +11,27 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
-    Long id;
+    private Long id;
 
     @Column(name = "email", unique = true)
-    String email;
+    private String email;
 
     @Column(name = "nickname", unique = true)
-    String nickname;
+    private String nickname;
 
     @Column(name = "password")
-    String password;
+    private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<UserRole> roles;
+    private List<UserRole> roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<UserWorkout> workouts;
+    private List<UserWorkout> workouts;
 
     public User() {
     }
 
-    public User(Long id, String email, String nickname, String password) {
-        this.id = id;
+    public User(String email, String nickname, String password) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;

@@ -10,25 +10,32 @@ public class UserRole implements GrantedAuthority {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Long id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
+
+    public UserRole() {
+    }
+
+    public UserRole(String name) {
+        this.name = name;
+    }
 
     @Override
     public String getAuthority() {
         return this.getName();
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
