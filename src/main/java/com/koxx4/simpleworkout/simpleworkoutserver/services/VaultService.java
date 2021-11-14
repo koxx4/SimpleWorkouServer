@@ -1,19 +1,16 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.services;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.DatabaseCredentials;
+import com.koxx4.simpleworkout.simpleworkoutserver.data.vault.DatabaseCredentials;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.VaultKeyValueSecretException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.vault.authentication.ClientAuthentication;
 import org.springframework.vault.client.VaultEndpoint;
 import org.springframework.vault.core.VaultTemplate;
 import org.springframework.vault.core.VaultVersionedKeyValueOperations;
 import org.springframework.vault.support.Versioned;
 
-import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Component
