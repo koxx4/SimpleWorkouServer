@@ -1,4 +1,4 @@
-package com.koxx4.simpleworkout.simpleworkoutserver;
+package com.koxx4.simpleworkout.simpleworkoutserver.data.vault;
 
 public class DatabaseCredentials {
     private String address;

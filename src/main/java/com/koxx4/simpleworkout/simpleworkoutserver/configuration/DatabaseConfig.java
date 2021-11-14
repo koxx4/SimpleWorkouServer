@@ -1,10 +1,9 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.DatabaseCredentials;
+import com.koxx4.simpleworkout.simpleworkoutserver.data.vault.DatabaseCredentials;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.VaultKeyValueSecretException;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.VaultService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
