@@ -20,6 +20,7 @@ public class UserWorkout {
     private Trail trail;
 
     @Column(name = "type")
+    @Enumerated(value = EnumType.STRING)
     private WorkoutType workoutType;
 
     @Column(name = "date")

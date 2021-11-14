@@ -3,6 +3,7 @@ package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.vault.authentication.AppRoleAuthentication;
 import org.springframework.vault.authentication.AppRoleAuthenticationOptions;
 import org.springframework.vault.authentication.AppRoleAuthenticationOptions.RoleId;
@@ -14,6 +15,7 @@ import org.springframework.vault.support.VaultToken;
 
 import java.net.URI;
 
+@Profile(value = "production")
 @Configuration
 public class VaultConfiguration extends AbstractVaultConfiguration {
 
