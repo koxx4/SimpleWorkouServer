@@ -1,7 +1,7 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "users_workouts")
@@ -30,6 +30,15 @@ public class UserWorkout {
 
     @Column(name = "distance")
     private Double distance;
+
+
+    public static enum WorkoutType {
+        RUNNING,
+        CYCLING,
+        HITCH_HIKING,
+        WALKING,
+        OTHER
+    }
 
     public UserWorkout() {
     }
