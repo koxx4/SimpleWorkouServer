@@ -4,6 +4,7 @@ import com.koxx4.simpleworkout.simpleworkoutserver.data.vault.DatabaseCredential
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.VaultKeyValueSecretException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.vault.authentication.ClientAuthentication;
 import org.springframework.vault.client.VaultEndpoint;
@@ -13,6 +14,7 @@ import org.springframework.vault.support.Versioned;
 
 import java.util.Map;
 
+@Profile(value = "production")
 @Component
 @DependsOn("vaultConfiguration")
 public class VaultService {
