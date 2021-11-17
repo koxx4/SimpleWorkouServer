@@ -11,5 +11,5 @@ import java.util.List;
 @RepositoryRestResource(path = "workouts", collectionResourceRel = "workouts")
 @CrossOrigin
 public interface UserWorkoutRestRepository extends PagingAndSortingRepository<UserWorkout, Long> {
-    List<UserWorkout> getAllByUserNickname(@Param("nickname") String nickname);
+    List<UserWorkout> getAllByJpaUserNickname(@Param("nickname") String nickname);
 }
