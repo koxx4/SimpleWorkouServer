@@ -1,23 +1,34 @@
-INSERT INTO users (nickname, password, email)
-    VALUES ('jcosgrove0', 'Ssq4pU', 'dmccoole0@networksolutions.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('dtomkinson1', 'LHRYyHo6', 'aheaffey1@goodreads.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('roclery2', 'IEpDHORtiCX', 'nhaine2@slideshare.net');
-INSERT INTO users (nickname, password, email)
-    VALUES ('alunbech3', 'Qvwz6D7rh', 'dmeadows3@admin.ch');
-INSERT INTO users (nickname, password, email)
-    VALUES ('tjantot4', '9so5CsDof', 'eregnard4@spotify.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('asiddons5', 'SX4L8S', 'gnuccitelli5@intel.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('dyuranovev6', '1TGsuszaqFf', 'mrandal6@ted.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('echildes7', 'T9UAxme7G', 'apizzey7@pbs.org');
-INSERT INTO users (nickname, password, email)
-    VALUES ('rgammack8', 't0DDOqUybt5', 'hhanse8@sohu.com');
-INSERT INTO users (nickname, password, email)
-    VALUES ('kmccomiskey9', 'zZHFZ4qvMi', 'ishelmerdine9@mtv.com');
+INSERT INTO users (nickname, email)
+    VALUES ('jcosgrove0', 'dmccoole0@networksolutions.com');
+INSERT INTO users (nickname, email)
+    VALUES ('dtomkinson1', 'aheaffey1@goodreads.com');
+INSERT INTO users (nickname, email)
+    VALUES ('roclery2', 'nhaine2@slideshare.net');
+INSERT INTO users (nickname, email)
+    VALUES ('alunbech3', 'dmeadows3@admin.ch');
+INSERT INTO users (nickname, email)
+    VALUES ('tjantot4', 'eregnard4@spotify.com');
+INSERT INTO users (nickname, email)
+    VALUES ('asiddons5', 'gnuccitelli5@intel.com');
+INSERT INTO users (nickname, email)
+    VALUES ('dyuranovev6', 'mrandal6@ted.com');
+INSERT INTO users (nickname, email)
+    VALUES ('echildes7', 'apizzey7@pbs.org');
+INSERT INTO users (nickname, email)
+    VALUES ('rgammack8', 'hhanse8@sohu.com');
+INSERT INTO users (nickname, email)
+    VALUES ('kmccomiskey9', 'ishelmerdine9@mtv.com');
+
+INSERT INTO passwords (password) VALUES ('SA5h2ReE');
+INSERT INTO passwords (password) VALUES ('qn9EzfuYyL3r');
+INSERT INTO passwords (password) VALUES ('e5mQfDCG');
+INSERT INTO passwords (password) VALUES ('XuoYBVstxJ5');
+INSERT INTO passwords (password) VALUES ('ObL2KqV');
+INSERT INTO passwords (password) VALUES ('GeVveY5R');
+INSERT INTO passwords (password) VALUES ('KqQevJ');
+INSERT INTO passwords (password) VALUES ('apxFcU');
+INSERT INTO passwords (password) VALUES ('icRs83aqEEac');
+INSERT INTO passwords (password) VALUES ('cP950MG');
 
 INSERT INTO trails () VALUES();
 INSERT INTO trails () VALUES();
@@ -44,15 +55,15 @@ INSERT INTO roles (name, user_id) VALUES ('PREMIUM_USER', 10);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
     VALUES (1, 'OTHER', '2020-10-05 22:50:01', 'nibh ligula nec sem duis aliquam convallis nunc proin at', 4231.2, 1);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
-    VALUES (2, 'OTHER', '2015-07-11 03:14:41', null, 2118.61, 2);
+    VALUES (2, 'OTHER', '2015-07-11 03:14:41', NULL, 2118.61, 2);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
-    VALUES (3, 'RUNNING', '2021-02-13 01:55:12', null, 4834.44, 3);
+    VALUES (3, 'RUNNING', '2021-02-13 01:55:12', NULL, 4834.44, 3);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
-    VALUES (4, 'WALKING', '2017-01-31 13:37:10', null, 2246.45, 4);
+    VALUES (4, 'WALKING', '2017-01-31 13:37:10', NULL, 2246.45, 4);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
-    VALUES (5, 'OTHER', '2015-01-24 16:26:05', null, 1283.56, 5);
+    VALUES (5, 'OTHER', '2015-01-24 16:26:05', NULL, 1283.56, 5);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
-    VALUES (6, 'WALKING', '2017-05-23 23:56:33', null, 1759.38, 6);
+    VALUES (6, 'WALKING', '2017-05-23 23:56:33', NULL, 1759.38, 6);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)
     VALUES (7, 'HITCH_HIKING', '2017-11-05 05:24:44', 'luctus et ultrices posuere cubilia curae mauris viverra diam', 2785.91, 7);
 INSERT INTO users_workouts (user_id, type, date, note, distance, trail_id)

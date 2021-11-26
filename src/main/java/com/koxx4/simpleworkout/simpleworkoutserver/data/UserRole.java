@@ -1,5 +1,6 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ public class UserRole implements GrantedAuthority {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private User user;
+    private JpaUser jpaUser;
 
     public UserRole() {
     }
@@ -47,11 +48,12 @@ public class UserRole implements GrantedAuthority {
         this.name = name;
     }
 
-    public User getUser() {
-        return user;
+    @JsonBackReference
+    public JpaUser getUser() {
+        return jpaUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(JpaUser jpaUser) {
+        this.jpaUser = jpaUser;
     }
 }

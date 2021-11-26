@@ -13,7 +13,7 @@ public class UserWorkout {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private JpaUser jpaUser;
 
     @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name = "trail_id")
@@ -59,12 +59,12 @@ public class UserWorkout {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public JpaUser getUser() {
+        return jpaUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(JpaUser jpaUser) {
+        this.jpaUser = jpaUser;
     }
 
     public Trail getTrail() {
