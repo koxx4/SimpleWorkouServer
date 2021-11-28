@@ -2,6 +2,7 @@ package com.koxx4.simpleworkout.simpleworkoutserver.security;
 
 import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUserPassword;
+import com.koxx4.simpleworkout.simpleworkoutserver.data.UserRole;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,12 @@ public class JpaUserDetailsManager implements UserDetailsManager {
         if(!userRepository.existsByNickname(userDetails.getUsername())) {
             JpaUser newJpaUser = new JpaUser(null, userDetails.getUsername());
             JpaUserPassword newJpaUserPassword = new JpaUserPassword(newJpaUser, userDetails.getPassword());
+
+            newJpaUser.setJpaPassword(newJpaUserPassword);
+            for(var role: userDetails.getAuthorities())
+                newJpaUser.addRole(new UserRole(role.getAuthority()));
+
             userRepository.save(newJpaUser);
-            passwordRepository.save(newJpaUserPassword);
         }
     }
 

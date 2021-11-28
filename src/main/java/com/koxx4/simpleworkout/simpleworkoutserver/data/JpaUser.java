@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,6 +72,9 @@ public class JpaUser {
     }
 
     public void addRole(UserRole role){
+        if(this.roles == null)
+            this.roles = new ArrayList<>();
+
         role.setUser(this);
         this.roles.add(role);
     }
