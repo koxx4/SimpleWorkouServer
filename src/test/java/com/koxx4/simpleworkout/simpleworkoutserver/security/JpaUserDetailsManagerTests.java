@@ -4,8 +4,6 @@ import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUserPassword;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaUserRepository;
-import com.koxx4.simpleworkout.simpleworkoutserver.security.JpaUserDetailsManager;
-import com.koxx4.simpleworkout.simpleworkoutserver.security.SecurityUser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +12,6 @@ import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.provisioning.UserDetailsManager;
 
-import java.util.Arrays;
 import java.util.List;
 
 

@@ -24,7 +24,7 @@ public class UserRole implements GrantedAuthority {
     }
 
     public UserRole(String name) {
-        this.name = name;
+        this.name = "ROLE_" + name;
     }
 
     @Override
