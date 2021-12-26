@@ -38,6 +38,7 @@ public class JpaUser {
         this.nickname = nickname;
     }
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -84,6 +85,7 @@ public class JpaUser {
         return this.roles.stream().map(UserRole::getName).toArray(String[]::new);
     }
 
+    @JsonIgnore
     public JpaUserPassword getJpaPassword() {
         return password;
     }

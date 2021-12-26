@@ -32,6 +32,7 @@ public class JpaUserDetailsManager implements UserDetailsManager {
             JpaUserPassword newJpaUserPassword = new JpaUserPassword(newJpaUser, userDetails.getPassword());
 
             newJpaUser.setJpaPassword(newJpaUserPassword);
+
             for(var role: userDetails.getAuthorities())
                 newJpaUser.addRole(new UserRole(role.getAuthority()));
 

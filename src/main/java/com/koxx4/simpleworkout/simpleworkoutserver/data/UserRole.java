@@ -24,7 +24,11 @@ public class UserRole implements GrantedAuthority {
     }
 
     public UserRole(String name) {
-        this.name = "ROLE_" + name;
+
+        if (name.startsWith("ROLE_"))
+            this.name = name;
+        else
+            this.name = "ROLE_" + name;
     }
 
     @Override
