@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -37,6 +38,7 @@ public class JpaUser {
         this.nickname = nickname;
     }
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }
@@ -71,6 +73,9 @@ public class JpaUser {
     }
 
     public void addRole(UserRole role){
+        if(this.roles == null)
+            this.roles = new ArrayList<>();
+
         role.setUser(this);
         this.roles.add(role);
     }
@@ -80,6 +85,7 @@ public class JpaUser {
         return this.roles.stream().map(UserRole::getName).toArray(String[]::new);
     }
 
+    @JsonIgnore
     public JpaUserPassword getJpaPassword() {
         return password;
     }
