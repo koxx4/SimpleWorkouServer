@@ -1,2 +1,2 @@
 #!/bin/bash
-mvn spring-boot:run -Dspring-boot.run.profiles=production
+./mvnw spring-boot:run -Dspring-boot.run.profiles=production
