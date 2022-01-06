@@ -54,11 +54,13 @@ public class JpaUserDetailsManager implements UserDetailsManager {
     public void changePassword(String s, String s1) {
         SecurityContext context = SecurityContextHolder.getContext();
         var nickname =  context.getAuthentication().getName();
-        var jpaUser = userRepository.findByNickname(nickname);
+        var fetchedUser = userRepository.findByNickname(nickname);
 
-        passwordRepository.delete(jpaUser.getJpaPassword());
-        JpaUserPassword newPassword = new JpaUserPassword(jpaUser, s1);
-        jpaUser.setJpaPassword(newPassword);
+        fetchedUser.ifPresent( jpaUser -> {
+            passwordRepository.delete(jpaUser.getJpaPassword());
+            JpaUserPassword newPassword = new JpaUserPassword(jpaUser, s1);
+            jpaUser.setJpaPassword(newPassword);
+        } );
     }
 
     @Override
@@ -70,9 +72,9 @@ public class JpaUserDetailsManager implements UserDetailsManager {
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         var user = userRepository.findByNickname(s);
 
-        if(user == null)
+        if(user.isEmpty())
             throw new UsernameNotFoundException("User with this username not found: " + s);
 
-        return new SecurityUser(user);
+        return new SecurityUser(user.get());
     }
 }

@@ -3,7 +3,7 @@ package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.security.JpaUserDetailsManager;
-import com.koxx4.simpleworkout.simpleworkoutserver.security.UserDataRestFilter;
+import com.koxx4.simpleworkout.simpleworkoutserver.security.UserPrivateAccessFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -57,10 +57,10 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    FilterRegistrationBean<UserDataRestFilter> userDataRestFilter(){
-        FilterRegistrationBean<UserDataRestFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+    FilterRegistrationBean<UserPrivateAccessFilter> userDataRestFilter(){
+        FilterRegistrationBean<UserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new UserDataRestFilter(authenticationManagerBean()));
+            filterRegistrationBean.setFilter(new UserPrivateAccessFilter(authenticationManagerBean()));
             filterRegistrationBean.addUrlPatterns("/users/*");
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
