@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Base64;
 
-public class UserDataRestFilter extends OncePerRequestFilter {
+public class UserPrivateAccessFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
 
-    public UserDataRestFilter(@Autowired AuthenticationManager authenticationManager) {
+    public UserPrivateAccessFilter(@Autowired AuthenticationManager authenticationManager) {
         super();
         this.authenticationManager = authenticationManager;
     }
