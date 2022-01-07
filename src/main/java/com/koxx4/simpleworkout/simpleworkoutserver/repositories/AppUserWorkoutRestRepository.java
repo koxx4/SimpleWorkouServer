@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
-@RepositoryRestResource(path = "/data/workouts", collectionResourceRel = "/data/workouts")
+@RepositoryRestResource(path = "workout", collectionResourceRel = "workouts")
 @CrossOrigin
-public interface UserWorkoutRestRepository extends PagingAndSortingRepository<UserWorkout, Long> {
-    List<UserWorkout> getAllByJpaUserNickname(@Param("nickname") String nickname);
+public interface AppUserWorkoutRestRepository extends PagingAndSortingRepository<UserWorkout, Long> {
+    List<UserWorkout> getAllByAppUserNickname(@Param("nickname") String nickname);
 }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class JpaUser {
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true)
@@ -21,19 +21,19 @@ public class JpaUser {
     @Column(name = "nickname", unique = true)
     private String nickname;
 
-    @OneToOne(mappedBy = "jpaUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private JpaUserPassword password;
+    @OneToOne(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private AppUserPassword password;
 
-    @OneToMany(mappedBy = "jpaUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> roles;
 
-    @OneToMany(mappedBy = "jpaUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<UserWorkout> workouts;
 
-    public JpaUser() {
+    public AppUser() {
     }
 
-    public JpaUser(String email, String nickname) {
+    public AppUser(String email, String nickname) {
         this.email = email;
         this.nickname = nickname;
     }
@@ -86,19 +86,28 @@ public class JpaUser {
     }
 
     @JsonIgnore
-    public JpaUserPassword getJpaPassword() {
+    public AppUserPassword getPassword() {
         return password;
     }
 
-    public void setJpaPassword(JpaUserPassword password) {
+    public void setPassword(AppUserPassword password) {
         this.password = password;
     }
 
+    @JsonManagedReference
     public List<UserWorkout> getWorkouts() {
         return workouts;
     }
 
     public void setWorkouts(List<UserWorkout> workouts) {
         this.workouts = workouts;
+    }
+
+    public void addWorkout(UserWorkout workout){
+        if(this.workouts == null)
+            this.workouts = new ArrayList<>();
+
+        workout.setUser(this);
+        this.workouts.add(workout);
     }
 }

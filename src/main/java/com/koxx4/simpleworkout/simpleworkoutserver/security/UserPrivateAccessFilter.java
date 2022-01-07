@@ -26,18 +26,11 @@ public class UserPrivateAccessFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String nickname = request.getParameter("nickname");
-        String email = request.getParameter("email");
-
-        if ( nickname == null && email == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            return;
-        }
-
         String encodedAuth = request.getHeader("authorization");
 
         if (encodedAuth == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("User credentials not found");
             return;
         }
         //TODO: pass should not be stored in string

@@ -18,7 +18,7 @@ public class UserRole implements GrantedAuthority {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private JpaUser jpaUser;
+    private AppUser appUser;
 
     public UserRole() {
     }
@@ -53,11 +53,11 @@ public class UserRole implements GrantedAuthority {
     }
 
     @JsonBackReference
-    public JpaUser getUser() {
-        return jpaUser;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(JpaUser jpaUser) {
-        this.jpaUser = jpaUser;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

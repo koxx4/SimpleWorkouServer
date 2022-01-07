@@ -1,5 +1,7 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,7 +15,7 @@ public class UserWorkout {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private JpaUser jpaUser;
+    private AppUser appUser;
 
     @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     @JoinColumn(name = "trail_id")
@@ -23,6 +25,7 @@ public class UserWorkout {
     @Enumerated(value = EnumType.STRING)
     private WorkoutType workoutType;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date")
     private Date date;
 
@@ -59,12 +62,13 @@ public class UserWorkout {
         this.id = id;
     }
 
-    public JpaUser getUser() {
-        return jpaUser;
+    @JsonBackReference
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(JpaUser jpaUser) {
-        this.jpaUser = jpaUser;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 
     public Trail getTrail() {

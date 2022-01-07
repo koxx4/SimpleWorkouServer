@@ -1,7 +1,6 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.security;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUser;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.JpaUserPassword;
+import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -9,25 +8,25 @@ import java.util.Collection;
 
 public class SecurityUser implements UserDetails {
 
-    private final JpaUser jpaUser;
+    private final AppUser appUser;
 
-    public SecurityUser(JpaUser user){
-        this.jpaUser = user;
+    public SecurityUser(AppUser user){
+        this.appUser = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return jpaUser.getRoles();
+        return appUser.getRoles();
     }
 
     @Override
     public String getPassword() {
-        return jpaUser.getJpaPassword().getPassword();
+        return appUser.getPassword().getPassword();
     }
 
     @Override
     public String getUsername() {
-        return jpaUser.getNickname();
+        return appUser.getNickname();
     }
 
     @Override

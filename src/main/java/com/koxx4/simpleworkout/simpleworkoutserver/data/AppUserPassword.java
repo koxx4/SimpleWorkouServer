@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "passwords")
-public class JpaUserPassword {
+public class AppUserPassword {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,13 +15,13 @@ public class JpaUserPassword {
 
     @OneToOne(fetch = FetchType.EAGER, cascade = {})
     @JoinColumn(name = "user_id")
-    private JpaUser jpaUser;
+    private AppUser appUser;
 
-    protected JpaUserPassword() {
+    protected AppUserPassword() {
     }
 
-    public JpaUserPassword(JpaUser targetUser, String passwordValue){
-        this.jpaUser = targetUser;
+    public AppUserPassword(AppUser targetUser, String passwordValue){
+        this.appUser = targetUser;
         this.password = passwordValue;
     }
 
@@ -42,11 +42,11 @@ public class JpaUserPassword {
     }
 
     @JsonIgnore
-    public JpaUser getUser() {
-        return jpaUser;
+    public AppUser getUser() {
+        return appUser;
     }
 
-    public void setUser(JpaUser jpaUser) {
-        this.jpaUser = jpaUser;
+    public void setUser(AppUser appUser) {
+        this.appUser = appUser;
     }
 }

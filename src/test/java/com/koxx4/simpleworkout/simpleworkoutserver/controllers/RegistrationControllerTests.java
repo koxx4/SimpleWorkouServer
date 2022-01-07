@@ -1,17 +1,13 @@
-package controllers;
+package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
 import com.koxx4.simpleworkout.simpleworkoutserver.controllers.RegistrationController;
-import com.koxx4.simpleworkout.simpleworkoutserver.repositories.JpaUserRepository;
-import org.assertj.core.api.Assertions;
-import org.assertj.core.api.HamcrestCondition;
+import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
+import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.hamcrest.MockitoHamcrest;
-import org.mockito.internal.hamcrest.HamcrestArgumentMatcher;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,15 +21,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RegistrationControllerTests {
 
     @Mock
-    private JpaUserRepository userRepository;
-
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private UserService userService;
 
     private MockMvc mockMvc;
 
     @BeforeEach
     public void setup(){
-        RegistrationController registrationController = new RegistrationController(userRepository, passwordEncoder);
+        RegistrationController registrationController = new RegistrationController(userService);
         this.mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
     }
 
@@ -44,8 +38,12 @@ public class RegistrationControllerTests {
                 .param("email", "simple@email.com")
                 .param("password", "pa$$word"))
                 .andExpect(status().isCreated());
-        Mockito.verify(userRepository, Mockito.atLeastOnce()).save(Mockito.any());
+
+        Mockito.verify(userService, Mockito.atLeastOnce()).
+                saveUser(Mockito.eq("test_user"), Mockito.eq("simple@email.com"),
+                        Mockito.eq("pa$$word"), Mockito.eq(new String[]{"REGULAR_USER"}));
     }
+
 
 //    @Test
 //    public void testRegistrationController_VerifySavedUserData() throws Exception {
