@@ -22,4 +22,6 @@ public interface UserService{
     boolean existsByEmail(String email);
     Optional<List<UserWorkout>> getAllUserWorkouts(String nickname);
     Optional<UserWorkout> getUserWorkout(String nickname, long workoutId);
+    Optional<AppUser> getUserById(long id);
+    Optional<AppUser> getUserByNickname(String nickname);
 }

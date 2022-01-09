@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface AppUserRepository extends CrudRepository<AppUser, Long> {
     Optional<AppUser> findByNickname(String nickname);
     Optional<AppUser> findByEmail(String email);
+    Optional<AppUser> findById(long id);
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
     void deleteByNickname(String nickname);

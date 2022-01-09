@@ -1,5 +1,6 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
+import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,17 @@ public class UserActionsController {
         return new ResponseEntity<>(workouts.get(), HttpStatus.OK);
     }
 
-    @PostMapping("/workout")
+    @PostMapping("workout")
     @ResponseStatus(code = HttpStatus.CREATED)
     public void addUserWorkout(@PathVariable String nickname,
                                @RequestBody(required = true) UserWorkout workout){
         userService.addWorkoutEntryToUser(nickname, workout);
+    }
+
+    @GetMapping("data")
+    public ResponseEntity<AppUser> getUserData(@PathVariable String nickname){
+        var foundUser = userService.getUserByNickname(nickname);
+        return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
     }
 
 

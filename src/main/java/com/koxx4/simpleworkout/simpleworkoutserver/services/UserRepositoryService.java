@@ -155,6 +155,16 @@ public class UserRepositoryService implements UserService{
         return workoutRepository.findByIdAndAppUserNickname(workoutId, nickname);
     }
 
+    @Override
+    public Optional<AppUser> getUserById(long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public Optional<AppUser> getUserByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
+    }
+
     private void identityCheck(String nickname, String email) throws SQLException {
         if(existsByNickname(nickname))
             throw new SQLException("User with this nickname already exists.");

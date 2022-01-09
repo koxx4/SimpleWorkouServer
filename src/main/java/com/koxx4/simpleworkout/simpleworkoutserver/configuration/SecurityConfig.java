@@ -56,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     FilterRegistrationBean<UserPrivateAccessFilter> userDataRestFilter(){
         FilterRegistrationBean<UserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new UserPrivateAccessFilter(authenticationManagerBean()));
-            filterRegistrationBean.addUrlPatterns("/user/*");
+            filterRegistrationBean.setFilter(new UserPrivateAccessFilter(authenticationManagerBean(), 3));
+            filterRegistrationBean.addUrlPatterns("/user/actions/*");
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
             e.printStackTrace();
