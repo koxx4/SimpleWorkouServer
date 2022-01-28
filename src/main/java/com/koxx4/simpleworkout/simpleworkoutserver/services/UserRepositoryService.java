@@ -8,7 +8,6 @@ import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordR
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserWorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

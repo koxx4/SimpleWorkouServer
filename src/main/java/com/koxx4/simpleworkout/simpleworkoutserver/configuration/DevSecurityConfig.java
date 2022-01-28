@@ -64,7 +64,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.cors().and().csrf().disable();
-        http.authorizeRequests().antMatchers("/register/*").permitAll()
+        http.authorizeRequests().mvcMatchers("/register/**").permitAll()
                 .antMatchers("/data/*").hasRole("ADMIN")
                 .anyRequest().authenticated();
     }
