@@ -36,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
+        http.cors().disable();
         http.authorizeRequests().mvcMatchers("/register/**").permitAll()
                 .antMatchers("/data/*").hasRole("ADMIN")
                 .anyRequest().authenticated();
