@@ -5,17 +5,22 @@ import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUserPassword;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserRole;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.sql.SQLException;
 
 @RestController
 @RequestMapping("register")
 @CrossOrigin
+@Validated
 public class RegistrationController {
 
     private final UserService userService;
@@ -25,16 +30,17 @@ public class RegistrationController {
     }
 
     @PostMapping("/user")
-    private ResponseEntity<AppUser> registerNewUser(@RequestParam(name = "username") String username,
-                                                    @RequestParam(name = "email") String email,
-                                                    @RequestParam(name = "password") CharSequence password) throws SQLException {
+
+    private ResponseEntity<AppUser> registerNewUser(@NotBlank @RequestParam String username,
+                                                    @Email @RequestParam String email,
+                                                    @NotBlank @RequestParam CharSequence password) throws SQLException {
 
         var createdUser  = userService.saveUser(username, email, password, new String[]{"REGULAR_USER"});
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/verify/{nickname}")
-    private boolean verifyThatUserExists(@PathVariable String nickname){
+    private boolean verifyThatUserExists(@NotBlank @PathVariable String nickname){
         return userService.existsByNickname(nickname);
     }
 

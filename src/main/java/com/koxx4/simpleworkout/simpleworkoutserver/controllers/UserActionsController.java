@@ -6,14 +6,16 @@ import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Temporal;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
 @RequestMapping("user/actions/{nickname}")
 @CrossOrigin
+@Validated
 public class UserActionsController {
     private final UserService userService;
 
@@ -24,14 +26,14 @@ public class UserActionsController {
     @PostMapping("nickname")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void changeUserNickname(@PathVariable String nickname,
-                                   @RequestParam(name = "new") String newNickname){
+                                   @NotBlank @RequestParam String newNickname){
         userService.changeUserNickname(nickname, newNickname);
     }
 
     @PostMapping("password")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void changeUserPassword(@PathVariable String nickname,
-                                   @RequestParam CharSequence password){
+                                   @NotBlank @RequestParam CharSequence password){
         userService.changeUserPassword(nickname, password);
     }
 
@@ -49,7 +51,7 @@ public class UserActionsController {
     }
 
     @GetMapping("data")
-    public ResponseEntity<AppUser> getUserData(@PathVariable String nickname){
+    public ResponseEntity<AppUser> getUserData(@NotBlank @PathVariable String nickname){
         var foundUser = userService.getUserByNickname(nickname);
         return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
     }

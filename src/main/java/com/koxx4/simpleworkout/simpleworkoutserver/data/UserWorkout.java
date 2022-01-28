@@ -3,6 +3,7 @@ package com.koxx4.simpleworkout.simpleworkoutserver.data;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity

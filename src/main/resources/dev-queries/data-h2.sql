@@ -19,16 +19,16 @@ INSERT INTO users (nickname, email)
 INSERT INTO users (nickname, email)
     VALUES ('kmccomiskey9', 'ishelmerdine9@mtv.com');
 
-INSERT INTO passwords (password) VALUES ('SA5h2ReE');
-INSERT INTO passwords (password) VALUES ('qn9EzfuYyL3r');
-INSERT INTO passwords (password) VALUES ('e5mQfDCG');
-INSERT INTO passwords (password) VALUES ('XuoYBVstxJ5');
-INSERT INTO passwords (password) VALUES ('ObL2KqV');
-INSERT INTO passwords (password) VALUES ('GeVveY5R');
-INSERT INTO passwords (password) VALUES ('KqQevJ');
-INSERT INTO passwords (password) VALUES ('apxFcU');
-INSERT INTO passwords (password) VALUES ('icRs83aqEEac');
-INSERT INTO passwords (password) VALUES ('cP950MG');
+INSERT INTO passwords (password, user_id) VALUES ('SA5h2ReE', 1);
+INSERT INTO passwords (password, user_id) VALUES ('qn9EzfuYyL3r', 2);
+INSERT INTO passwords (password, user_id) VALUES ('e5mQfDCG', 3);
+INSERT INTO passwords (password, user_id) VALUES ('XuoYBVstxJ5', 4);
+INSERT INTO passwords (password, user_id) VALUES ('ObL2KqV', 5);
+INSERT INTO passwords (password, user_id) VALUES ('GeVveY5R', 6);
+INSERT INTO passwords (password, user_id) VALUES ('KqQevJ', 7);
+INSERT INTO passwords (password, user_id) VALUES ('apxFcU', 8);
+INSERT INTO passwords (password, user_id) VALUES ('icRs83aqEEac', 9);
+INSERT INTO passwords (password, user_id) VALUES ('cP950MG', 10);
 
 INSERT INTO trails () VALUES();
 INSERT INTO trails () VALUES();
