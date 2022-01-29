@@ -1,15 +1,10 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
 import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUserPassword;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.UserRole;
-import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
-import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +25,7 @@ public class RegistrationController {
     }
 
     @PostMapping("/user")
-
-    private ResponseEntity<AppUser> registerNewUser(@NotBlank @RequestParam String username,
+    public ResponseEntity<AppUser> registerNewUser(@NotBlank @RequestParam String username,
                                                     @Email @RequestParam String email,
                                                     @NotBlank @RequestParam CharSequence password) throws SQLException {
 
@@ -40,7 +34,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/verify/{nickname}")
-    private boolean verifyThatUserExists(@NotBlank @PathVariable String nickname){
+    public boolean verifyThatUserExists(@NotBlank @PathVariable String nickname){
         return userService.existsByNickname(nickname);
     }
 
