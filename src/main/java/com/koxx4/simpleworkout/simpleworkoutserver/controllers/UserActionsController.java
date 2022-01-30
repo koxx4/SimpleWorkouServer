@@ -53,8 +53,8 @@ public class UserActionsController {
     @DeleteMapping("workout")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void deleteUserWorkout(@PathVariable String nickname,
-                               @RequestBody(required = true) Long id){
-        userService.deleteUserWorkoutEntry(nickname, id);
+                               @RequestBody(required = true) String id){
+        userService.deleteUserWorkoutEntry(nickname, Long.parseLong(id));
     }
 
     @GetMapping("data")
