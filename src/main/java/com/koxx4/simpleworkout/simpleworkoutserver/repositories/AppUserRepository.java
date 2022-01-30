@@ -14,4 +14,5 @@ public interface AppUserRepository extends CrudRepository<AppUser, Long> {
     boolean existsByEmail(String email);
     boolean existsByNickname(String nickname);
     void deleteByNickname(String nickname);
+    void deleteById(long id);
 }

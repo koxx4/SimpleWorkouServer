@@ -34,6 +34,7 @@ public class TrailPoint {
         this.longitude = longitude;
     }
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }

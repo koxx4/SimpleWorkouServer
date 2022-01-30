@@ -1,7 +1,8 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.List;
 
@@ -24,6 +25,7 @@ public class Trail {
         this.trailPoints.add(trailPoint);
     }
 
+    @JsonIgnore
     public Long getId() {
         return id;
     }

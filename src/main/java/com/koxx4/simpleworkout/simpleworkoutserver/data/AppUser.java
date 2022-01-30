@@ -110,4 +110,5 @@ public class AppUser {
         workout.setUser(this);
         this.workouts.add(workout);
     }
+
 }

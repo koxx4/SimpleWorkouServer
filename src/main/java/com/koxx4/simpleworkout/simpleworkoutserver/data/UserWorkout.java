@@ -1,6 +1,8 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,7 +20,7 @@ public class UserWorkout {
     @JoinColumn(name = "user_id")
     private AppUser appUser;
 
-    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
     @JoinColumn(name = "trail_id")
     private Trail trail;
 

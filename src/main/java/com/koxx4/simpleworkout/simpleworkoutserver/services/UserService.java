@@ -15,6 +15,7 @@ public interface UserService{
     void changeUserEmail(String userNickname, String newEmail);
     void changeUserPassword(String userNickname, CharSequence newPassword);
     void deleteUserWorkoutEntry(String userNickname, long workoutId);
+    void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout);
     void deleteAllUserWorkoutEntries(String userNickname);
     void deleteUser(String nickname);
     void deleteUser(long id);

@@ -115,6 +115,11 @@ public class UserRepositoryService implements UserService{
 
     @Override
     public void deleteUserWorkoutEntry(String userNickname, long workoutId) {
+        this.workoutRepository.deleteByAppUserNicknameAndId(userNickname, workoutId);
+    }
+
+    @Override
+    public void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout) {
 
     }
 
@@ -125,12 +130,12 @@ public class UserRepositoryService implements UserService{
 
     @Override
     public void deleteUser(String nickname) {
-
+        this.userRepository.deleteByNickname(nickname);
     }
 
     @Override
     public void deleteUser(long id) {
-
+        this.userRepository.deleteById(id);
     }
 
     @Override

@@ -50,10 +50,23 @@ public class UserActionsController {
         userService.addWorkoutEntryToUser(nickname, workout);
     }
 
+    @DeleteMapping("workout")
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public void deleteUserWorkout(@PathVariable String nickname,
+                               @RequestBody(required = true) Long id){
+        userService.deleteUserWorkoutEntry(nickname, id);
+    }
+
     @GetMapping("data")
     public ResponseEntity<AppUser> getUserData(@NotBlank @PathVariable String nickname){
         var foundUser = userService.getUserByNickname(nickname);
         return new ResponseEntity<>(foundUser.get(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("data")
+    @ResponseStatus(code = HttpStatus.ACCEPTED)
+    public void deleteUserData(@NotBlank @PathVariable String nickname){
+        userService.deleteUser(nickname);
     }
 
 
