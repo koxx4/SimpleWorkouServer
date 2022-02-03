@@ -13,7 +13,7 @@ public class AppUserPassword {
 
     private String password;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = {})
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private AppUser appUser;
 

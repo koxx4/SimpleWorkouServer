@@ -4,6 +4,8 @@ import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUserPassword;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserRole;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
+import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchAppUserException;
+import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchWorkoutException;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserWorkoutRepository;
@@ -80,63 +82,72 @@ public class UserRepositoryService implements UserService{
     }
 
     @Override
-    public void addWorkoutEntryToUser(String nickname, UserWorkout workout) {
-        var user = userRepository.findByNickname(nickname);
-
-        user.ifPresent(appUser -> {
-            appUser.addWorkout(workout);
-            userRepository.save(appUser);
-        });
+    public UserWorkout addWorkoutEntryToUser(String nickname, UserWorkout workout) throws NoSuchAppUserException {
+        AppUser foundUser = userRepository.findByNickname(nickname).orElseThrow(NoSuchAppUserException::new);
+        foundUser.addWorkout(workout);
+        return workoutRepository.save(workout);
     }
 
     @Override
-    public void changeUserNickname(String oldNickname, String newNickname) {
-        Optional<AppUser> fetchedUser = userRepository.findByNickname(oldNickname);
-
-        fetchedUser.ifPresent( user -> {
-            user.setNickname(newNickname);
-            userRepository.save(user);
-        });
+    public void changeUserNickname(String oldNickname, String newNickname) throws NoSuchAppUserException {
+        AppUser fetchedUser = userRepository.findByNickname(oldNickname).orElseThrow(NoSuchAppUserException::new);
+        fetchedUser.setNickname(newNickname);
+        userRepository.save(fetchedUser);
     }
 
     @Override
-    public void changeUserEmail(String userNickname, String newEmail) {
-
+    public void changeUserEmail(String userNickname, String newEmail) throws NoSuchAppUserException  {
+        AppUser fetchedUser = userRepository.findByNickname(userNickname).orElseThrow(NoSuchAppUserException::new);
+        fetchedUser.setEmail(newEmail);
+        userRepository.save(fetchedUser);
     }
 
     @Override
-    public void changeUserPassword(String userNickname, CharSequence newPassword) {
-        userRepository.findByNickname(userNickname).ifPresent(appUser -> {
-                    AppUserPassword newEncodedPassword =
-                            new AppUserPassword(appUser, passwordEncoder.encode(newPassword));
-                    passwordRepository.delete(appUser.getPassword());
-                    appUser.setPassword(newEncodedPassword);
-                    userRepository.save(appUser);
-                });
+    public void changeUserPassword(String userNickname, CharSequence newPassword) throws NoSuchAppUserException{
+        AppUser fetchedUser = userRepository.findByNickname(userNickname).orElseThrow(NoSuchAppUserException::new);
+        AppUserPassword newEncodedPassword = new AppUserPassword(fetchedUser, passwordEncoder.encode(newPassword));
+
+        passwordRepository.delete(fetchedUser.getPassword());
+        fetchedUser.setPassword(newEncodedPassword);
+        userRepository.save(fetchedUser);
     }
 
     @Override
-    public void deleteUserWorkoutEntry(String userNickname, long workoutId) {
+    public void deleteUserWorkoutEntry(String userNickname, long workoutId) throws NoSuchAppUserException, NoSuchWorkoutException {
+        if (!workoutRepository.existsById(workoutId))
+            throw new NoSuchWorkoutException(String.format("No workout with ID{%d} found", workoutId));
+        if(!userRepository.existsByNickname(userNickname))
+            throw new NoSuchAppUserException();
+
         this.workoutRepository.deleteByAppUserNicknameAndId(userNickname, workoutId);
     }
 
     @Override
-    public void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout) {
-
+    public void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout) throws NoSuchAppUserException, NoSuchWorkoutException{
+        this.deleteUserWorkoutEntry(userNickname, userWorkout.getId());
     }
 
     @Override
-    public void deleteAllUserWorkoutEntries(String userNickname) {
-
+    public void deleteAllUserWorkoutEntries(String userNickname) throws NoSuchAppUserException {
+        if (!userRepository.existsByNickname(userNickname))
+            throw new NoSuchAppUserException();
+        this.workoutRepository.deleteAllByAppUserNickname(userNickname);
     }
 
     @Override
-    public void deleteUser(String nickname) {
-        this.userRepository.deleteByNickname(nickname);
+    public void deleteUser(String userNickname) throws NoSuchAppUserException {
+        if (!userRepository.existsByNickname(userNickname))
+            throw new NoSuchAppUserException();
+
+        this.userRepository.deleteByNickname(userNickname);
     }
 
     @Override
-    public void deleteUser(long id) {
+    public void deleteUser(long id) throws NoSuchAppUserException{
+        if (!userRepository.existsById(id))
+            throw new NoSuchAppUserException();
+
+
         this.userRepository.deleteById(id);
     }
 
