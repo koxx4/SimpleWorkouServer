@@ -48,7 +48,7 @@ public class UserActionsController {
 
     @PostMapping("workout")
     public ResponseEntity<UserWorkout> addUserWorkout(Authentication authentication,
-                               @RequestBody(required = true) UserWorkout workout) throws NoSuchAppUserException {
+                               @RequestBody UserWorkout workout) throws NoSuchAppUserException {
         var savedWorkout = userService.addWorkoutEntryToUser(authentication.getName(), workout);
         return new ResponseEntity<>(savedWorkout, HttpStatus.CREATED);
     }
@@ -56,7 +56,7 @@ public class UserActionsController {
     @DeleteMapping("workout")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void deleteUserWorkout(Authentication authentication,
-                               @RequestParam(required = true) Long id) throws NoSuchAppUserException, NoSuchWorkoutException {
+                               @RequestParam Long id) throws NoSuchAppUserException, NoSuchWorkoutException {
         userService.deleteUserWorkoutEntry(authentication.getName(), id);
     }
 
