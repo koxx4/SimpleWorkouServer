@@ -68,8 +68,12 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(){
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(signingKey, this.contextConfigurableJWTProcessor()));
-            filterRegistrationBean.addUrlPatterns("/user/actions/*");
+            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(
+                    signingKey,
+                    this.contextConfigurableJWTProcessor(),
+                    userRepository));
+
+            filterRegistrationBean.addUrlPatterns("/user/*");
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
             e.printStackTrace();
