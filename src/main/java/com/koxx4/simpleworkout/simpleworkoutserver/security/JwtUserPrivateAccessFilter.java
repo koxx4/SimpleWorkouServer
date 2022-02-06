@@ -22,15 +22,12 @@ import java.text.ParseException;
 
 public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
 
-    private final byte[] signingKey;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
     private final AppUserRepository userRepository;
 
-    public JwtUserPrivateAccessFilter(byte[] signingKey,
-                                      ConfigurableJWTProcessor<SecurityContext> jwtProcessor,
+    public JwtUserPrivateAccessFilter(ConfigurableJWTProcessor<SecurityContext> jwtProcessor,
                                       AppUserRepository userRepository) {
-        this.signingKey = signingKey;
         this.jwtProcessor = jwtProcessor;
         this.userRepository = userRepository;
     }

@@ -83,7 +83,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
             filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(
-                    signingKey,
                     this.contextConfigurableJWTProcessor(),
                     userRepository));
             filterRegistrationBean.addUrlPatterns("/user/*");
