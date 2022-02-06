@@ -1,7 +1,5 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.controllers.RegistrationController;
-import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;

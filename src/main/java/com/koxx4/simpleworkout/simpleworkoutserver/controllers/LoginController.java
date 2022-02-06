@@ -21,12 +21,12 @@ import java.util.Map;
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
+    private final byte[] signingKey;
 
-    @Value("${jwt.secret}")
-    private byte[] signingKey;
-
-    public LoginController(@Autowired AuthenticationManager authenticationManager){
+    public LoginController(@Autowired AuthenticationManager authenticationManager,
+                           @Value("${jwt.secret}") byte[] signingKey){
         this.authenticationManager = authenticationManager;
+        this.signingKey = signingKey;
     }
 
     @GetMapping("{nickname}")
