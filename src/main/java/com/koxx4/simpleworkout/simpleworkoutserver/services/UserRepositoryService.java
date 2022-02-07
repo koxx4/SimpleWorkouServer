@@ -12,8 +12,8 @@ import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserWorkoutRe
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -152,32 +152,38 @@ public class UserRepositoryService implements UserService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<List<UserWorkout>> getAllUserWorkouts(String nickname) {
         var user = userRepository.findByNickname(nickname);
         return user.map(AppUser::getWorkouts);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<UserWorkout> getUserWorkout(String nickname, long workoutId) {
         return workoutRepository.findByIdAndAppUserNickname(workoutId, nickname);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<AppUser> getUserById(long id) {
         return userRepository.findById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<AppUser> getUserByNickname(String nickname) {
         return userRepository.findByNickname(nickname);
     }

@@ -7,8 +7,21 @@ import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.security.AppUserDetailsService;
-import com.koxx4.simpleworkout.simpleworkoutserver.security.UserPrivateAccessFilter;
+import com.koxx4.simpleworkout.simpleworkoutserver.security.JwtUserPrivateAccessFilter;
+import com.nimbusds.jose.JOSEObjectType;
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import com.nimbusds.jose.jwk.source.JWKSource;
+import com.nimbusds.jose.proc.DefaultJOSEObjectTypeVerifier;
+import com.nimbusds.jose.proc.JWSKeySelector;
+import com.nimbusds.jose.proc.JWSVerificationKeySelector;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.nimbusds.jwt.proc.DefaultJWTClaimsVerifier;
+import com.nimbusds.jwt.proc.DefaultJWTProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,13 +30,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 
 
 @Profile(value = "dev")
@@ -36,6 +51,9 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserPasswordRepository passwordRepository;
 
+    @Value("${jwt.secret}")
+    private byte[] signingKey;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return NoOpPasswordEncoder.getInstance();
@@ -47,11 +65,14 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    FilterRegistrationBean<UserPrivateAccessFilter> userDataRestFilter(){
-        FilterRegistrationBean<UserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(){
+        FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new UserPrivateAccessFilter(authenticationManagerBean(), 3));
-            filterRegistrationBean.addUrlPatterns("/user/actions/*");
+            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(
+                    this.contextConfigurableJWTProcessor(),
+                    userRepository));
+
+            filterRegistrationBean.addUrlPatterns("/user/*");
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,15 +85,43 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic();
         http.cors().and().csrf().disable();
+
+        http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
         http.authorizeRequests().mvcMatchers("/register/**").permitAll()
+                .mvcMatchers("/login/**").permitAll()
                 .antMatchers("/data/*").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public ConfigurableJWTProcessor<SecurityContext> contextConfigurableJWTProcessor(){
+        // Create a JWT processor for the access tokens
+        ConfigurableJWTProcessor<SecurityContext> jwtProcessor =
+                new DefaultJWTProcessor<>();
+
+        jwtProcessor.setJWSTypeVerifier(
+                new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("jwt")));
+
+        JWKSource<SecurityContext> keySource =
+                new ImmutableSecret<>(this.signingKey);
+
+        JWSKeySelector<SecurityContext> keySelector =
+                new JWSVerificationKeySelector<>(JWSAlgorithm.HS256, keySource);
+
+        jwtProcessor.setJWSKeySelector(keySelector);
+
+        jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier(
+                new JWTClaimsSet.Builder().build(),
+                new HashSet<>(Arrays.asList("iat", "exp"))));
+
+        return jwtProcessor;
     }
 
     @Override
