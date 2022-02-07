@@ -64,7 +64,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/register/**").permitAll()
                 .mvcMatchers("/login/**").permitAll()
                 .antMatchers("/data/*").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .anyRequest().permitAll();
     }
 
     @Bean
