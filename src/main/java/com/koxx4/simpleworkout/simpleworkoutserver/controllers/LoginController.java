@@ -22,22 +22,25 @@ public class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final byte[] signingKey;
+    private final long jwtExpiryTime;
 
     public LoginController(@Autowired AuthenticationManager authenticationManager,
-                           @Value("${jwt.secret}") byte[] signingKey){
+                           @Value("${jwt.secret}") byte[] signingKey,
+                           @Value("${jwt.expiryTime}") long jwtExpiryTime){
         this.authenticationManager = authenticationManager;
         this.signingKey = signingKey;
+        this.jwtExpiryTime = jwtExpiryTime;
     }
 
-    @GetMapping("{nickname}")
+    @PostMapping("{nickname}")
     public ResponseEntity<String> handleLogin(@PathVariable String nickname, @NotBlank @RequestParam CharSequence password) throws JOSEException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nickname, password));
-        var jws = createJWS(nickname, 60 * 15);
+        var jws = createJWS(nickname, jwtExpiryTime);
 
         return new ResponseEntity<>(jws.serialize(), HttpStatus.ACCEPTED);
     }
 
-    private JWSObject createJWS(String username, int secondsExpiry) throws JOSEException{
+    private JWSObject createJWS(String username, long secondsExpiry) throws JOSEException{
         var signer = new MACSigner(signingKey);
         var header = new JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT).build();
 

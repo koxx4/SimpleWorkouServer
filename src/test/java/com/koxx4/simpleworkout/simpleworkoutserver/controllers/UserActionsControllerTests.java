@@ -35,7 +35,8 @@ class UserActionsControllerTests {
         RegistrationController registrationController = new RegistrationController(userServiceMock);
         LoginController loginController = new LoginController(
                 authenticationManager,
-                "VeryLongSecretIKnowRightLeftRightLeft".getBytes());
+                "VeryLongSecretIKnowRightLeftRightLeft".getBytes(),
+                60);
 
         this.mockMvc = MockMvcBuilders.standaloneSetup(userActionsController, registrationController, loginController)
                 .setCustomArgumentResolvers(new AuthenticationPrincipalArgumentResolver())
@@ -55,7 +56,7 @@ class UserActionsControllerTests {
                         .param("password", "password1"))
                 .andExpect(status().isCreated());
 
-        String token = mockMvc.perform(MockMvcRequestBuilders.get("/login/test_user")
+        String token = mockMvc.perform(MockMvcRequestBuilders.post("/login/test_user")
                         .param("password", "password1"))
                 .andExpect(status().isAccepted()).andReturn().getResponse().getContentAsString();
 

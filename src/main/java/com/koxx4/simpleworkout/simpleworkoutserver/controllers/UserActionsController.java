@@ -2,16 +2,17 @@ package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
 import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
+import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.InvalidOldPasswordProvidedException;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchAppUserException;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchWorkoutException;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +40,12 @@ public class UserActionsController {
     @PostMapping("password")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void changeUserPassword(Authentication authentication,
-                                   @NotBlank @RequestParam CharSequence password) throws NoSuchAppUserException {
-        userService.changeUserPassword(authentication.getName(), password);
+                                   @NotBlank @RequestParam CharSequence oldPassword,
+                                   @NotBlank @RequestParam CharSequence newPassword) throws NoSuchAppUserException, InvalidOldPasswordProvidedException {
+        if ( !((CharSequence)authentication.getCredentials()).equals(oldPassword) )
+            throw new InvalidOldPasswordProvidedException();
+
+        userService.changeUserPassword(authentication.getName(), newPassword);
     }
 
     @GetMapping("workout")
