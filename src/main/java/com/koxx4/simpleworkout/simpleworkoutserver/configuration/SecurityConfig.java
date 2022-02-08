@@ -45,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserPasswordRepository passwordRepository;
 
-    @Value("${jwt.secret}")
-    private byte[] signingKey;
+    @Autowired
+    ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -82,9 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(){
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(
-                    this.contextConfigurableJWTProcessor(),
-                    userRepository));
+            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(configurableJWTProcessor, userRepository));
             filterRegistrationBean.addUrlPatterns("/user/*");
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
@@ -98,29 +96,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsService(){
         return new AppUserDetailsService(userRepository);
-    }
-
-    @Bean
-    public ConfigurableJWTProcessor<SecurityContext> contextConfigurableJWTProcessor(){
-        // Create a JWT processor for the access tokens
-        ConfigurableJWTProcessor<SecurityContext> jwtProcessor =
-                new DefaultJWTProcessor<>();
-
-        jwtProcessor.setJWSTypeVerifier(
-                new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("jwt")));
-
-        JWKSource<SecurityContext> keySource =
-                new ImmutableSecret<>(this.signingKey);
-
-        JWSKeySelector<SecurityContext> keySelector =
-                new JWSVerificationKeySelector<>(JWSAlgorithm.HS256, keySource);
-
-        jwtProcessor.setJWSKeySelector(keySelector);
-
-        jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier(
-                new JWTClaimsSet.Builder().build(),
-                new HashSet<>(Arrays.asList("iat", "exp"))));
-
-        return jwtProcessor;
     }
 }

@@ -10,6 +10,8 @@ import com.koxx4.simpleworkout.simpleworkoutserver.security.AppUserDetailsServic
 import com.koxx4.simpleworkout.simpleworkoutserver.security.JwtUserPrivateAccessFilter;
 import com.nimbusds.jose.JOSEObjectType;
 import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKMatcher;
+import com.nimbusds.jose.jwk.JWKSelector;
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.DefaultJOSEObjectTypeVerifier;
@@ -51,8 +53,8 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserPasswordRepository passwordRepository;
 
-    @Value("${jwt.secret}")
-    private byte[] signingKey;
+    @Autowired
+    ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -68,9 +70,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(){
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
         try {
-            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(
-                    this.contextConfigurableJWTProcessor(),
-                    userRepository));
+            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(configurableJWTProcessor, userRepository));
 
             filterRegistrationBean.addUrlPatterns("/user/*");
             filterRegistrationBean.setOrder(1);
@@ -98,30 +98,6 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
-    }
-
-    @Bean
-    public ConfigurableJWTProcessor<SecurityContext> contextConfigurableJWTProcessor(){
-        // Create a JWT processor for the access tokens
-        ConfigurableJWTProcessor<SecurityContext> jwtProcessor =
-                new DefaultJWTProcessor<>();
-
-        jwtProcessor.setJWSTypeVerifier(
-                new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("jwt")));
-
-        JWKSource<SecurityContext> keySource =
-                new ImmutableSecret<>(this.signingKey);
-
-        JWSKeySelector<SecurityContext> keySelector =
-                new JWSVerificationKeySelector<>(JWSAlgorithm.HS256, keySource);
-
-        jwtProcessor.setJWSKeySelector(keySelector);
-
-        jwtProcessor.setJWTClaimsSetVerifier(new DefaultJWTClaimsVerifier(
-                new JWTClaimsSet.Builder().build(),
-                new HashSet<>(Arrays.asList("iat", "exp"))));
-
-        return jwtProcessor;
     }
 
     @Override

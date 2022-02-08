@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,12 @@ import java.util.List;
 @Validated
 public class UserActionsController {
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserActionsController(@Autowired UserService userService) {
+    @Autowired
+    public UserActionsController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("nickname")
@@ -42,10 +46,10 @@ public class UserActionsController {
     public void changeUserPassword(Authentication authentication,
                                    @NotBlank @RequestParam CharSequence oldPassword,
                                    @NotBlank @RequestParam CharSequence newPassword) throws NoSuchAppUserException, InvalidOldPasswordProvidedException {
-        if ( !((CharSequence)authentication.getCredentials()).equals(oldPassword) )
+        if (!passwordEncoder.matches(oldPassword, (String)authentication.getCredentials()))
             throw new InvalidOldPasswordProvidedException();
 
-        userService.changeUserPassword(authentication.getName(), newPassword);
+          userService.changeUserPassword(authentication.getName(), newPassword);
     }
 
     @GetMapping("workout")
