@@ -1,34 +1,49 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
+import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordRepository;
+import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
+import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserWorkoutRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(MockitoExtension.class)
+@WebMvcTest(RegistrationController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles(profiles = "dev")
 public class RegistrationControllerTests {
 
-    @Mock
+    @MockBean
+    private ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor;
+
+    @MockBean
+    private AppUserRepository appUserRepository;
+
+    @MockBean
+    private AppUserPasswordRepository appUserPasswordRepository;
+
+    @MockBean
+    private AppUserWorkoutRepository appUserWorkoutRepository;
+
+
+    @MockBean
     private UserService userService;
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @BeforeEach
-    public void setup(){
-        RegistrationController registrationController = new RegistrationController(userService);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(registrationController).build();
-    }
-
     @Test
-    public void testRegistrationController_RegisteringDummyUser() throws Exception {
+    public void registeringTestUser_WithValidData() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/register/user")
                 .param("username", "test_user")
                 .param("email", "simple@email.com")
@@ -40,24 +55,12 @@ public class RegistrationControllerTests {
                         Mockito.eq("pa$$word"), Mockito.eq(new String[]{"REGULAR_USER"}));
     }
 
-
-//    @Test
-//    public void testRegistrationController_VerifySavedUserData() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders.post("/register/user")
-//                        .param("username", "test_user")
-//                        .param("email", "simple@email.com")
-//                        .param("password", "pa$$word"))
-//                .andExpect(status().isCreated());
-//        var registeredUser = userRepository.findByNickname("test_user");
-//
-//        Assertions.assertThat(registeredUser.getNickname())
-//                .isEqualTo("test_user");
-//
-//        Assertions.assertThat(registeredUser.getEmail())
-//                .isEqualTo("simple@email.com");
-//
-//        Assertions.assertThat(registeredUser.getJpaPassword().getPassword())
-//                .isEqualTo(passwordEncoder.encode("pa$$word"));
-//    }
-
+    @Test
+    public void registeringTestUser_WithInvalidUsernameAndEmail() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/register/user")
+                        .param("username", " ")
+                        .param("email", "simplemail.com")
+                        .param("password", "pa$$word"))
+                .andExpect(status().isBadRequest());
+    }
 }
