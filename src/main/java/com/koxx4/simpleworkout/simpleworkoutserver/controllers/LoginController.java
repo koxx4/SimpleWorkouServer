@@ -1,5 +1,6 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
+import com.koxx4.simpleworkout.simpleworkoutserver.configuration.SpringFoxConfig;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.jwk.JWKMatcher;
@@ -8,6 +9,8 @@ import com.nimbusds.jose.jwk.OctetSequenceKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,15 +22,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotBlank;
-import java.sql.Date;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RestController
 @RequestMapping("login")
 @CrossOrigin
 @Validated
+@Api(tags = {SpringFoxConfig.loginControllerTag})
 public class LoginController {
 
     private final AuthenticationManager authenticationManager;
@@ -46,6 +47,7 @@ public class LoginController {
         this.keysCount = keysCount;
     }
 
+    @ApiOperation("Authorizes user against database and generates JWS token if user is valid")
     @PostMapping("{nickname}")
     public ResponseEntity<String> handleLogin(@PathVariable String nickname, @NotBlank @RequestParam CharSequence password) throws JOSEException {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nickname, password));
