@@ -1,11 +1,13 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
+import com.koxx4.simpleworkout.simpleworkoutserver.configuration.SpringFoxConfig;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.InvalidOldPasswordProvidedException;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchAppUserException;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchWorkoutException;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ import java.util.List;
 @RequestMapping("user")
 @CrossOrigin
 @Validated
+@Api(tags = {SpringFoxConfig.userActionsController})
 public class UserActionsController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;

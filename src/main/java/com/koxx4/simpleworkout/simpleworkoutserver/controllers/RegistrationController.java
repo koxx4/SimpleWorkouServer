@@ -1,7 +1,9 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.controllers;
 
+import com.koxx4.simpleworkout.simpleworkoutserver.configuration.SpringFoxConfig;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import java.sql.SQLException;
 @RequestMapping("register")
 @CrossOrigin
 @Validated
+@Api(tags = {SpringFoxConfig.registrationController})
 public class RegistrationController {
 
     private final UserService userService;
