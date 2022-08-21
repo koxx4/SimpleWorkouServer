@@ -12,15 +12,18 @@ public class AppUserDetailsService implements UserDetailsService {
 
     private final AppUserRepository userRepository;
 
-    public AppUserDetailsService(@Autowired AppUserRepository userRepository) {
+    @Autowired
+    public AppUserDetailsService(AppUserRepository userRepository) {
+
         this.userRepository = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+
         var user = userRepository.findByNickname(s);
 
-        if(user.isEmpty())
+        if (user.isEmpty())
             throw new UsernameNotFoundException("User with this username not found: " + s);
 
         return new SecurityUser(user.get());

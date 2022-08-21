@@ -34,45 +34,55 @@ public class AppUser {
     }
 
     public AppUser(String email, String nickname) {
+
         this.email = email;
         this.nickname = nickname;
     }
 
     @JsonIgnore
     public Long getId() {
+
         return id;
     }
 
     public void setId(Long id) {
+
         this.id = id;
     }
 
     public String getEmail() {
+
         return email;
     }
 
     public void setEmail(String email) {
+
         this.email = email;
     }
 
     public String getNickname() {
+
         return nickname;
     }
 
     public void setNickname(String nickname) {
+
         this.nickname = nickname;
     }
 
     @JsonManagedReference
     public List<UserRole> getRoles() {
+
         return roles;
     }
 
     public void setRoles(List<UserRole> roles) {
+
         this.roles = roles;
     }
 
-    public void addRole(UserRole role){
+    public void addRole(UserRole role) {
+
         if(this.roles == null)
             this.roles = new ArrayList<>();
 
@@ -81,29 +91,35 @@ public class AppUser {
     }
 
     @JsonIgnore
-    public String[] getRolesArray(){
+    public String[] getRolesArray() {
+
         return this.roles.stream().map(UserRole::getName).toArray(String[]::new);
     }
 
     @JsonIgnore
     public AppUserPassword getPassword() {
+
         return password;
     }
 
     public void setPassword(AppUserPassword password) {
+
         this.password = password;
     }
 
     @JsonManagedReference
     public List<UserWorkout> getWorkouts() {
+
         return workouts;
     }
 
     public void setWorkouts(List<UserWorkout> workouts) {
+
         this.workouts = workouts;
     }
 
-    public void addWorkout(UserWorkout workout){
+    public void addWorkout(UserWorkout workout) {
+
         if(this.workouts == null)
             this.workouts = new ArrayList<>();
 

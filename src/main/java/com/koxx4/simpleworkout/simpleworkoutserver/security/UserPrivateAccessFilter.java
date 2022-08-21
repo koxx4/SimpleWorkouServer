@@ -34,6 +34,7 @@ public class UserPrivateAccessFilter extends OncePerRequestFilter {
         String usernamePathParam = request.getServletPath().split("[/]")[nicknamePosition];
 
         if (encodedAuth == null) {
+
             failRoutine(response, HttpStatus.BAD_REQUEST, "User credentials not found");
             return;
         }
@@ -43,16 +44,22 @@ public class UserPrivateAccessFilter extends OncePerRequestFilter {
         CharSequence user = decodedAuth[0];
         CharSequence password = decodedAuth[1];
 
-        if (!user.equals(usernamePathParam)){
+        if (!user.equals(usernamePathParam)) {
+
             failRoutine(response, HttpStatus.BAD_REQUEST, "Invalid user credentials provided.");
+
             return;
         }
 
 
-        try{
+        try {
+
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user, password));
-        } catch (AuthenticationException exception){
+
+        } catch (AuthenticationException exception) {
+
             failRoutine(response, HttpStatus.UNAUTHORIZED, "Invalid user credentials provided.");
+
             return;
         }
 
@@ -60,6 +67,7 @@ public class UserPrivateAccessFilter extends OncePerRequestFilter {
     }
 
     private void failRoutine(HttpServletResponse response, HttpStatus status, String msg) throws IOException {
+
         response.setStatus(status.value());
         response.getWriter().println(msg);
     }

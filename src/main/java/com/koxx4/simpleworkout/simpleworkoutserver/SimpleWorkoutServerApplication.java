@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class SimpleWorkoutServerApplication {
 
     public static void main(String[] args) {
+
         SpringApplication.run(SimpleWorkoutServerApplication.class, args);
         System.out.println("SimpleWorkout server started");
     }

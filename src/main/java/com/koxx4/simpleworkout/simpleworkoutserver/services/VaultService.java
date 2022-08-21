@@ -22,13 +22,18 @@ public class VaultService {
     private final VaultEndpoint vaultEndpoint;
     private final ClientAuthentication auth;
 
-    public VaultService(@Autowired VaultEndpoint endpoint,
-                        @Autowired ClientAuthentication auth) {
+
+    @Autowired
+    public VaultService(VaultEndpoint endpoint,
+                        ClientAuthentication auth) {
+
         this.vaultEndpoint = endpoint;
         this.auth = auth;
     }
 
+
     public DatabaseCredentials getDatabaseCredentials() throws VaultKeyValueSecretException {
+
         VaultTemplate vaultTemplate = new VaultTemplate(vaultEndpoint, auth);
         VaultVersionedKeyValueOperations keyValueOperations = vaultTemplate.opsForVersionedKeyValue("secret");
         Versioned<Map<String, Object>> versionedSecret = keyValueOperations.get("db/sw/main_db");
@@ -36,12 +41,12 @@ public class VaultService {
         if (versionedSecret == null || !versionedSecret.hasData())
             throw new VaultKeyValueSecretException("Couldn't get database credentials! Suitable key value pair was not found.");
 
-            DatabaseCredentials databaseCredentials = new DatabaseCredentials();
-            databaseCredentials.setDbName(String.valueOf(versionedSecret.getData().get("db_name")));
-            databaseCredentials.setUsername(String.valueOf(versionedSecret.getData().get("db_username")));
-            databaseCredentials.setPassword(String.valueOf(versionedSecret.getData().get("db_password")));
-            databaseCredentials.setAddress(String.valueOf(versionedSecret.getData().get("db_address")));
+        DatabaseCredentials databaseCredentials = new DatabaseCredentials();
+        databaseCredentials.setDbName(String.valueOf(versionedSecret.getData().get("db_name")));
+        databaseCredentials.setUsername(String.valueOf(versionedSecret.getData().get("db_username")));
+        databaseCredentials.setPassword(String.valueOf(versionedSecret.getData().get("db_password")));
+        databaseCredentials.setAddress(String.valueOf(versionedSecret.getData().get("db_address")));
 
-            return databaseCredentials;
+        return databaseCredentials;
     }
 }

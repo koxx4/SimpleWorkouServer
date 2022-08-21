@@ -23,13 +23,14 @@ import java.util.List;
 @RequestMapping("user")
 @CrossOrigin
 @Validated
-@Api(tags = {SpringFoxConfig.userActionsController})
+@Api(tags = {SpringFoxConfig.USER_ACTIONS_CONTROLLER})
 public class UserActionsController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
     public UserActionsController(UserService userService, PasswordEncoder passwordEncoder) {
+
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
     }
@@ -38,6 +39,7 @@ public class UserActionsController {
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void changeUserNickname(Authentication authentication,
                                    @NotBlank @RequestParam String newNickname) throws NoSuchAppUserException {
+
         userService.changeUserNickname(authentication.getName(), newNickname);
     }
 
@@ -46,6 +48,7 @@ public class UserActionsController {
     public void changeUserPassword(Authentication authentication,
                                    @NotBlank @RequestParam CharSequence oldPassword,
                                    @NotBlank @RequestParam CharSequence newPassword) throws NoSuchAppUserException, InvalidOldPasswordProvidedException {
+
         if (!passwordEncoder.matches(oldPassword, (String)authentication.getCredentials()))
             throw new InvalidOldPasswordProvidedException();
 
@@ -54,14 +57,18 @@ public class UserActionsController {
 
     @GetMapping("workout")
     public ResponseEntity<List<UserWorkout>> getAllUserWorkouts(Authentication authentication) throws NoSuchWorkoutException {
+
         var workouts = userService.getAllUserWorkouts(authentication.getName());
+
         return new ResponseEntity<>(workouts.orElseThrow(NoSuchWorkoutException::new), HttpStatus.OK);
     }
 
     @PostMapping("workout")
     public ResponseEntity<UserWorkout> addUserWorkout(Authentication authentication,
                                @RequestBody UserWorkout workout) throws NoSuchAppUserException {
+
         var savedWorkout = userService.addWorkoutEntryToUser(authentication.getName(), workout);
+
         return new ResponseEntity<>(savedWorkout, HttpStatus.CREATED);
     }
 
@@ -69,20 +76,22 @@ public class UserActionsController {
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void deleteUserWorkout(Authentication authentication,
                                @RequestParam Long id) throws NoSuchAppUserException, NoSuchWorkoutException {
+
         userService.deleteUserWorkoutEntry(authentication.getName(), id);
     }
 
     @GetMapping("data")
     public ResponseEntity<AppUser> getUserData(Authentication authentication) throws NoSuchAppUserException {
+
         var foundUser = userService.getUserByNickname(authentication.getName());
+
         return new ResponseEntity<>(foundUser.orElseThrow(NoSuchAppUserException::new), HttpStatus.OK);
     }
 
     @DeleteMapping("data")
     @ResponseStatus(code = HttpStatus.ACCEPTED)
     public void deleteUserData(Authentication authentication) throws NoSuchAppUserException {
+
         userService.deleteUser(authentication.getName());
     }
-
-
 }

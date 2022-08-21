@@ -35,24 +35,31 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor;
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
+
         return NoOpPasswordEncoder.getInstance();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
+
         return new AppUserDetailsService(userRepository);
     }
 
     @Bean
-    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(){
+    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter() {
+
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
+
         try {
+
             filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(configurableJWTProcessor, userRepository));
 
             filterRegistrationBean.addUrlPatterns("/user/*");
+
             filterRegistrationBean.setOrder(1);
         } catch (Exception e) {
+
             e.printStackTrace();
             return null;
         }
@@ -61,6 +68,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.httpBasic();
         http.cors().and().csrf().disable();
 
@@ -75,11 +83,13 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
+
         return super.authenticationManagerBean();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
         auth.userDetailsService(this.userDetailsService());
     }
 }
