@@ -28,8 +28,8 @@ import java.util.concurrent.ThreadLocalRandom;
 @RequestMapping("login")
 @CrossOrigin
 @Validated
-@Api(tags = {SpringFoxConfig.loginControllerTag})
-public class LoginController {
+@Api(tags = {SpringFoxConfig.LOGIN_CONTROLLER_TAG})
+class LoginController {
 
     private final AuthenticationManager authenticationManager;
     private final JWKSource<SecurityContext> jwkSource;
@@ -40,7 +40,8 @@ public class LoginController {
     public LoginController(AuthenticationManager authenticationManager,
                            JWKSource<SecurityContext> jwkSource,
                            ObjectProvider<JWTClaimsSet> jwtClaimsSetProvider,
-                           @Qualifier("keysCount") Integer keysCount){
+                           @Qualifier("keysCount") Integer keysCount) {
+
         this.authenticationManager = authenticationManager;
         this.jwkSource = jwkSource;
         this.jwtClaimsSetProvider = jwtClaimsSetProvider;
@@ -50,26 +51,30 @@ public class LoginController {
     @ApiOperation("Authorizes user against database and generates JWS token if user is valid")
     @PostMapping("{nickname}")
     public ResponseEntity<String> handleLogin(@PathVariable String nickname, @NotBlank @RequestParam CharSequence password) throws JOSEException {
+
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(nickname, password));
-        var jws = createJWS(nickname);
+
+        JWSObject jws = createJWS(nickname);
 
         return new ResponseEntity<>(jws.serialize(), HttpStatus.ACCEPTED);
     }
 
-    private JWSObject createJWS(String username) throws JOSEException{
+    private JWSObject createJWS(String username) throws JOSEException {
+
         var jwk = jwkSource.get(new JWKSelector(new JWKMatcher.Builder()
                 .algorithm(JWSAlgorithm.HS256)
-                .keyID(String.valueOf(ThreadLocalRandom.current().nextInt(keysCount)+1))
+                .keyID(String.valueOf(ThreadLocalRandom.current().nextInt(keysCount) + 1))
                 .build()), null).get(0);
 
-        var signer = new MACSigner((OctetSequenceKey) jwk);
+        MACSigner signer = new MACSigner((OctetSequenceKey) jwk);
 
-        var header = new JWSHeader.Builder(JWSAlgorithm.HS256)
+        JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.HS256)
                 .keyID(jwk.getKeyID())
                 .type(JOSEObjectType.JWT)
                 .build();
 
-        var claims = jwtClaimsSetProvider.getObject(username);
+        JWTClaimsSet claims = jwtClaimsSetProvider.getObject(username);
+
         JWSObject jwsObject = new JWSObject(header, new Payload(claims.getClaims()));
 
         jwsObject.sign(signer);

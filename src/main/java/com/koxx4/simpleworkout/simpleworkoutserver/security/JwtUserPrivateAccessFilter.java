@@ -28,6 +28,7 @@ public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
 
     public JwtUserPrivateAccessFilter(ConfigurableJWTProcessor<SecurityContext> jwtProcessor,
                                       AppUserRepository userRepository) {
+
         this.jwtProcessor = jwtProcessor;
         this.userRepository = userRepository;
     }

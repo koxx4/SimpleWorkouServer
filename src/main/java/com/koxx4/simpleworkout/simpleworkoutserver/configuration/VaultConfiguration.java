@@ -26,19 +26,22 @@ public class VaultConfiguration extends AbstractVaultConfiguration {
 
     @Bean
     @Override
-    public VaultEndpoint vaultEndpoint(){
+    public VaultEndpoint vaultEndpoint() {
+
         return VaultEndpoint.from(vaultApiUri);
     }
 
     @Bean
     @Override
-    public ClientAuthentication clientAuthentication(){
+    public ClientAuthentication clientAuthentication() {
+
         AppRoleAuthenticationOptions options = AppRoleAuthenticationOptions
                 .builder()
                 .appRole("simpleworkout-server-role")
                 .roleId(RoleId.pull(VaultToken.of(appRoleInitialToken)))
                 .secretId(SecretId.pull(VaultToken.of(appRoleInitialToken)))
                 .build();
+
         return new AppRoleAuthentication(options, restOperations());
     }
 }

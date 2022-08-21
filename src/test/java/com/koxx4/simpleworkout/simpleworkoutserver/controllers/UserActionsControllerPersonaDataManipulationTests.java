@@ -47,6 +47,7 @@ class UserActionsControllerPersonaDataManipulationTests {
     @Test
     @WithMockUser
     void changeUserNicknameWithValidNickname() throws Exception {
+
         mockMvc.perform(post("/user/nickname")
                         .param("newNickname", "new_nickname"))
                 .andExpect(status().isAccepted());
@@ -55,6 +56,7 @@ class UserActionsControllerPersonaDataManipulationTests {
     @Test
     @WithMockUser
     void changeUserNicknameWithInvalidNickname() throws Exception {
+
         mockMvc.perform(post("/user/nickname")
                         .param("newNickname", "    "))
                 .andExpect(status().isBadRequest());

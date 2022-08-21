@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.validation.ConstraintViolationException;
 
 @ControllerAdvice
-public class ConstraintViolationControllerAdvice {
+class ConstraintViolationControllerAdvice {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Included request parameter has illegal structure")
-    public void handleConstraintViolationException(){
+    public void handleConstraintViolationException() {
         //pass
     }
-
 
 }

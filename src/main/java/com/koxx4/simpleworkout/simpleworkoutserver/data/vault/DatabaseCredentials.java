@@ -6,7 +6,7 @@ public class DatabaseCredentials {
     private String username;
     private String password;
 
-    public DatabaseCredentials(){
+    public DatabaseCredentials() {
 
     }
 

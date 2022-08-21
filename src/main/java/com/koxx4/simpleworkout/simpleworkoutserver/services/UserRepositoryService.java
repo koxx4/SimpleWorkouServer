@@ -27,15 +27,19 @@ public class UserRepositoryService implements UserService{
     private final AppUserWorkoutRepository workoutRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserRepositoryService(@Autowired AppUserRepository appUserRepository,
-                                 @Autowired AppUserWorkoutRepository workoutRepository,
-                                 @Autowired AppUserPasswordRepository appPasswordRepository,
-                                 @Autowired PasswordEncoder passwordEncoder) {
+
+    @Autowired
+    public UserRepositoryService(AppUserRepository appUserRepository,
+                                 AppUserWorkoutRepository workoutRepository,
+                                 AppUserPasswordRepository appPasswordRepository,
+                                 PasswordEncoder passwordEncoder) {
+
         this.userRepository = appUserRepository;
         this.workoutRepository = workoutRepository;
         this.passwordRepository = appPasswordRepository;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     /**
      * Uses provided password encoder to encode the provided raw password
@@ -49,6 +53,7 @@ public class UserRepositoryService implements UserService{
      */
     @Override
     public AppUser saveUser(AppUser user, CharSequence password) throws SQLException {
+
         identityCheck(user.getNickname(), user.getEmail());
 
         user.setPassword(new AppUserPassword(user, passwordEncoder.encode(password)));

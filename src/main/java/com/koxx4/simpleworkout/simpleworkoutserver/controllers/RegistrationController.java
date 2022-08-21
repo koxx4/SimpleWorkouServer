@@ -18,27 +18,31 @@ import java.sql.SQLException;
 @RequestMapping("register")
 @CrossOrigin
 @Validated
-@Api(tags = {SpringFoxConfig.registrationController})
-public class RegistrationController {
+@Api(tags = {SpringFoxConfig.REGISTRATION_CONTROLLER})
+class RegistrationController {
 
     private final UserService userService;
 
-    public RegistrationController(@Autowired UserService userService) {
+    @Autowired
+    RegistrationController(UserService userService) {
+
         this.userService = userService;
     }
+
 
     @PostMapping("/user")
     public ResponseEntity<AppUser> registerNewUser(@NotBlank @RequestParam String username,
                                                     @Email @RequestParam String email,
                                                     @NotBlank @RequestParam CharSequence password) throws SQLException {
 
-        var createdUser  = userService.saveUser(username, email, password, new String[]{"REGULAR_USER"});
+        AppUser createdUser  = userService.saveUser(username, email, password, new String[]{"REGULAR_USER"});
+
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/verify/{nickname}")
-    public boolean verifyThatUserExists(@NotBlank @PathVariable String nickname){
+    public boolean verifyThatUserExists(@NotBlank @PathVariable String nickname) {
+
         return userService.existsByNickname(nickname);
     }
-
 }
