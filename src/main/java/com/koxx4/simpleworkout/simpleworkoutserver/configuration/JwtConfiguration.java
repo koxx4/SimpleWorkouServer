@@ -34,19 +34,24 @@ public class JwtConfiguration {
     private long secondsToTokenExpire;
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(){
+    public JWKSource<SecurityContext> jwkSource() {
+
         if (hmacKeys.isEmpty())
             throw new IllegalStateException("Keys for signing JWS tokens cannot be empty!");
 
         List<JWK> keys = new ArrayList<>();
-        for(var key : hmacKeys.keySet()){
+
+        for(var hmacKeyPairs : hmacKeys.entrySet()) {
+
             keys.add(new OctetSequenceKey
-                    .Builder(hmacKeys.get(key))
+                    .Builder(hmacKeyPairs.getValue())
                     .algorithm(JWSAlgorithm.HS256)
-                    .keyID(key)
+                    .keyID(hmacKeyPairs.getKey())
                     .build());
         }
-        var keySet = new JWKSet(keys);
+
+        JWKSet keySet = new JWKSet(keys);
+
         return new ImmutableJWKSet<>(keySet);
     }
 
