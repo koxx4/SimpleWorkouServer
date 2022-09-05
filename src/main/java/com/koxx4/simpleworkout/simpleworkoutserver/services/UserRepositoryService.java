@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class UserRepositoryService implements UserService{
+public class UserRepositoryService implements UserService {
 
     private final AppUserRepository userRepository;
     private final AppUserPasswordRepository passwordRepository;
@@ -88,13 +88,16 @@ public class UserRepositoryService implements UserService{
 
     @Override
     public UserWorkout addWorkoutEntryToUser(String nickname, UserWorkout workout) throws NoSuchAppUserException {
+
         AppUser foundUser = userRepository.findByNickname(nickname).orElseThrow(NoSuchAppUserException::new);
         foundUser.addWorkout(workout);
+
         return workoutRepository.save(workout);
     }
 
     @Override
     public void changeUserNickname(String oldNickname, String newNickname) throws NoSuchAppUserException {
+
         AppUser fetchedUser = userRepository.findByNickname(oldNickname).orElseThrow(NoSuchAppUserException::new);
         fetchedUser.setNickname(newNickname);
         userRepository.save(fetchedUser);
@@ -102,14 +105,17 @@ public class UserRepositoryService implements UserService{
 
     @Override
     public void changeUserEmail(String userNickname, String newEmail) throws NoSuchAppUserException  {
+
         AppUser fetchedUser = userRepository.findByNickname(userNickname).orElseThrow(NoSuchAppUserException::new);
         fetchedUser.setEmail(newEmail);
         userRepository.save(fetchedUser);
     }
 
     @Override
-    public void changeUserPassword(String userNickname, CharSequence newPassword) throws NoSuchAppUserException{
+    public void changeUserPassword(String userNickname, CharSequence newPassword) throws NoSuchAppUserException {
+
         AppUser fetchedUser = userRepository.findByNickname(userNickname).orElseThrow(NoSuchAppUserException::new);
+
         AppUserPassword newEncodedPassword = new AppUserPassword(fetchedUser, passwordEncoder.encode(newPassword));
 
         passwordRepository.delete(fetchedUser.getPassword());
@@ -119,8 +125,10 @@ public class UserRepositoryService implements UserService{
 
     @Override
     public void deleteUserWorkoutEntry(String userNickname, long workoutId) throws NoSuchAppUserException, NoSuchWorkoutException {
+
         if (!workoutRepository.existsById(workoutId))
             throw new NoSuchWorkoutException(String.format("No workout with ID{%d} found", workoutId));
+
         if(!userRepository.existsByNickname(userNickname))
             throw new NoSuchAppUserException();
 
@@ -128,19 +136,22 @@ public class UserRepositoryService implements UserService{
     }
 
     @Override
-    public void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout) throws NoSuchAppUserException, NoSuchWorkoutException{
+    public void deleteUserWorkoutEntry(String userNickname, UserWorkout userWorkout) throws NoSuchAppUserException, NoSuchWorkoutException {
         this.deleteUserWorkoutEntry(userNickname, userWorkout.getId());
     }
 
     @Override
     public void deleteAllUserWorkoutEntries(String userNickname) throws NoSuchAppUserException {
+
         if (!userRepository.existsByNickname(userNickname))
             throw new NoSuchAppUserException();
+
         this.workoutRepository.deleteAllByAppUserNickname(userNickname);
     }
 
     @Override
     public void deleteUser(String userNickname) throws NoSuchAppUserException {
+
         if (!userRepository.existsByNickname(userNickname))
             throw new NoSuchAppUserException();
 
@@ -148,7 +159,7 @@ public class UserRepositoryService implements UserService{
     }
 
     @Override
-    public void deleteUser(long id) throws NoSuchAppUserException{
+    public void deleteUser(long id) throws NoSuchAppUserException {
         if (!userRepository.existsById(id))
             throw new NoSuchAppUserException();
 
@@ -194,6 +205,7 @@ public class UserRepositoryService implements UserService{
     }
 
     private void identityCheck(String nickname, String email) throws SQLException {
+
         if(existsByNickname(nickname))
             throw new SQLException("User with this nickname already exists.");
 

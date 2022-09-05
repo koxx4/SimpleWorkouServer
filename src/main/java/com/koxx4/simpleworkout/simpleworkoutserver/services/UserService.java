@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService{
+public interface UserService {
     AppUser saveUser(AppUser user, CharSequence password) throws SQLException;
     AppUser saveUser(String nickname, String email, CharSequence password, String[] roles) throws SQLException;
     UserWorkout addWorkoutEntryToUser(String nickname, UserWorkout workout) throws NoSuchAppUserException;

@@ -2,7 +2,6 @@ package com.koxx4.simpleworkout.simpleworkoutserver.data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 

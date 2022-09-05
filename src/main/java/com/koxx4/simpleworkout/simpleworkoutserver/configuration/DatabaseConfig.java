@@ -3,7 +3,6 @@ package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 import com.koxx4.simpleworkout.simpleworkoutserver.data.vault.DatabaseCredentials;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.VaultKeyValueSecretException;
 import com.koxx4.simpleworkout.simpleworkoutserver.services.VaultService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,11 +16,8 @@ import javax.sql.DataSource;
 @EnableJpaRepositories(basePackages = {"com.koxx4.simpleworkout.simpleworkoutserver.repositories"})
 public class DatabaseConfig {
 
-    @Autowired
-    VaultService vaultService;
-
     @Bean
-    public DataSource dataSource() throws VaultKeyValueSecretException {
+    public DataSource dataSource(VaultService vaultService) throws VaultKeyValueSecretException {
 
         DatabaseCredentials databaseCredentials = vaultService.getDatabaseCredentials();
 
@@ -38,5 +34,4 @@ public class DatabaseConfig {
 
         return dataSource;
     }
-
 }
