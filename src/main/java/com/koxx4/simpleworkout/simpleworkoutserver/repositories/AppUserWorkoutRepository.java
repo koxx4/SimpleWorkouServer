@@ -8,6 +8,6 @@ import java.util.Optional;
 public interface AppUserWorkoutRepository extends CrudRepository<UserWorkout, Long> {
     Optional<UserWorkout> findByIdAndAppUserNickname(long id, String nickname);
     void deleteById(long id);
-    void deleteByAppUserNicknameAndId(String appUser_nickname, long id);
-    void deleteAllByAppUserNickname(String appUser_nickname);
+    void deleteByAppUserNicknameAndId(String appUserNickname, long id);
+    void deleteAllByAppUserNickname(String appUserNickname);
 }

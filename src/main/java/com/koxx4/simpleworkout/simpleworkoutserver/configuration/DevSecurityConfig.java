@@ -31,8 +31,6 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AppUserPasswordRepository passwordRepository;
 
-    @Autowired
-    ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -47,7 +45,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter() {
+    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor) {
 
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 

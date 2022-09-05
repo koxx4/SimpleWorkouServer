@@ -9,7 +9,6 @@ import com.nimbusds.jose.proc.SecurityContext;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,9 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.ParseException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private static final Logger LOGGER = getLogger(JwtUserPrivateAccessFilter.class);
     private final ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
     private final AppUserRepository userRepository;
 
@@ -64,7 +65,7 @@ public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
 
         } catch (NoSuchAppUserException | ParseException | JOSEException | BadJOSEException e) {
 
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             failRoutine(response);
             return;
         }
