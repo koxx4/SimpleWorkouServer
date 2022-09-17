@@ -1,11 +1,9 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.configuration;
 
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordRepository;
-import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.security.AppUserDetailsService;
 import com.koxx4.simpleworkout.simpleworkoutserver.security.JwtUserPrivateAccessFilter;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +14,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -26,10 +23,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private AppUserRepository userRepository;
+    private AppUserPasswordRepository passwordRepository;
 
     @Autowired
-    private AppUserPasswordRepository passwordRepository;
+    private AppUserDetailsService appUserDetailsService;
 
 
     @Bean
@@ -39,19 +36,13 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-
-        return new AppUserDetailsService(userRepository);
-    }
-
-    @Bean
-    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(ConfigurableJWTProcessor<SecurityContext> configurableJWTProcessor) {
+    FilterRegistrationBean<JwtUserPrivateAccessFilter> userDataRestFilter(UserService userService) {
 
         FilterRegistrationBean<JwtUserPrivateAccessFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 
         try {
 
-            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(configurableJWTProcessor, userRepository));
+            filterRegistrationBean.setFilter(new JwtUserPrivateAccessFilter(userService));
 
             filterRegistrationBean.addUrlPatterns("/user/*");
 
@@ -69,6 +60,9 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.httpBasic();
         http.cors().and().csrf().disable();
+
+        //For H2 Console proper rendering
+        http.headers().frameOptions().sameOrigin();
 
         http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
@@ -88,7 +82,7 @@ public class DevSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.userDetailsService(this.userDetailsService());
+        auth.userDetailsService(appUserDetailsService);
     }
 }
 
