@@ -1,20 +1,23 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.services;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUserPassword;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.UserRole;
-import com.koxx4.simpleworkout.simpleworkoutserver.data.UserWorkout;
+import com.koxx4.simpleworkout.simpleworkoutserver.data.*;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchAppUserException;
 import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchWorkoutException;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserPasswordRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
 import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserWorkoutRepository;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.proc.BadJOSEException;
+import com.nimbusds.jose.proc.SecurityContext;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,18 +29,21 @@ public class UserRepositoryService implements UserService {
     private final AppUserPasswordRepository passwordRepository;
     private final AppUserWorkoutRepository workoutRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
 
 
     @Autowired
     public UserRepositoryService(AppUserRepository appUserRepository,
                                  AppUserWorkoutRepository workoutRepository,
                                  AppUserPasswordRepository appPasswordRepository,
-                                 PasswordEncoder passwordEncoder) {
+                                 PasswordEncoder passwordEncoder,
+                                 ConfigurableJWTProcessor<SecurityContext> jwtProcessor) {
 
         this.userRepository = appUserRepository;
         this.workoutRepository = workoutRepository;
         this.passwordRepository = appPasswordRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtProcessor = jwtProcessor;
     }
 
 
@@ -204,6 +210,34 @@ public class UserRepositoryService implements UserService {
         return userRepository.findByNickname(nickname);
     }
 
+    @Override
+    public AppUserAuthenticationTokenDto getAppUserAuthDtoByJwtToken(String jwtToken) {
+
+        try {
+
+            JWTClaimsSet claims  = jwtProcessor.process(jwtToken, null);
+
+            String username = (String) claims.getClaim("username");
+
+            return userRepository.findByNickname(username)
+                    .map(this::toAppUserAuthenticationTokenDto)
+                    .orElseThrow(NoSuchAppUserException::new);
+
+        } catch (BadJOSEException | ParseException | JOSEException e) {
+
+            throw new NoSuchAppUserException(e);
+        }
+    }
+
+    private AppUserAuthenticationTokenDto toAppUserAuthenticationTokenDto(AppUser appUser) {
+
+        return new AppUserAuthenticationTokenDto(
+                appUser.getNickname(),
+                appUser.getPassword().getPassword(),
+                appUser.getRoles()
+        );
+    }
+
     private void identityCheck(String nickname, String email) throws SQLException {
 
         if(existsByNickname(nickname))
@@ -212,5 +246,4 @@ public class UserRepositoryService implements UserService {
         if(existsByEmail(email))
             throw new SQLException("User with this email already exists.");
     }
-
 }

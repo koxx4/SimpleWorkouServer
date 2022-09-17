@@ -1,13 +1,7 @@
 package com.koxx4.simpleworkout.simpleworkoutserver.security;
 
-import com.koxx4.simpleworkout.simpleworkoutserver.data.AppUser;
-import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.NoSuchAppUserException;
-import com.koxx4.simpleworkout.simpleworkoutserver.repositories.AppUserRepository;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.proc.BadJOSEException;
-import com.nimbusds.jose.proc.SecurityContext;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.proc.ConfigurableJWTProcessor;
+import com.koxx4.simpleworkout.simpleworkoutserver.exceptions.UnauthorizedRequestException;
+import com.koxx4.simpleworkout.simpleworkoutserver.services.UserService;
 import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,51 +13,39 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 
+import static com.koxx4.simpleworkout.simpleworkoutserver.services.RequestUtils.extractJwtToken;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
 
     private static final Logger LOGGER = getLogger(JwtUserPrivateAccessFilter.class);
-    private final ConfigurableJWTProcessor<SecurityContext> jwtProcessor;
-    private final AppUserRepository userRepository;
 
-    public JwtUserPrivateAccessFilter(ConfigurableJWTProcessor<SecurityContext> jwtProcessor,
-                                      AppUserRepository userRepository) {
+    private final UserService userService;
 
-        this.jwtProcessor = jwtProcessor;
-        this.userRepository = userRepository;
+
+    public JwtUserPrivateAccessFilter(UserService userService) {
+
+        this.userService = userService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String encodedAuth = request.getHeader("authorization");
-
-        if (encodedAuth == null || !encodedAuth.startsWith("Bearer")) {
-
-            failRoutine(response);
-            return;
-        }
-
-        String encodedToken = encodedAuth.replace("Bearer ", "");
-
         try {
 
-            JWTClaimsSet claims  = jwtProcessor.process(encodedToken, null);
-            String username = (String) claims.getClaim("username");
-            AppUser foundAppUser = userRepository.findByNickname(username)
-                    .orElseThrow(NoSuchAppUserException::new);
+            String encodedToken = extractJwtToken(request)
+                    .orElseThrow(UnauthorizedRequestException::new);
 
-            SecurityContextHolder.getContext()
-                    .setAuthentication(new UsernamePasswordAuthenticationToken(
-                            foundAppUser.getNickname(),
-                            foundAppUser.getPassword().getPassword(),
-                            foundAppUser.getRoles()));
+            var appUserAuthenticationTokenDto = userService.getAppUserAuthDtoByJwtToken(encodedToken);
 
-        } catch (NoSuchAppUserException | ParseException | JOSEException | BadJOSEException e) {
+            SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+                    appUserAuthenticationTokenDto.getNickname(),
+                    appUserAuthenticationTokenDto.getPassword(),
+                    appUserAuthenticationTokenDto.getRoles()));
+
+        } catch (Exception e) {
 
             LOGGER.error(e.getMessage());
             failRoutine(response);
@@ -78,5 +60,4 @@ public class JwtUserPrivateAccessFilter extends OncePerRequestFilter {
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.getWriter().println("Token is not valid");
     }
-
 }

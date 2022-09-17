@@ -24,8 +24,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
+
 @Configuration
-public class JwtConfiguration {
+class JwtConfiguration {
 
     @Value("#{${jwt.secret}}")
     private Map<String, byte[]> hmacKeys;
@@ -36,7 +38,7 @@ public class JwtConfiguration {
     @Bean
     public JWKSource<SecurityContext> jwkSource() {
 
-        if (hmacKeys.isEmpty())
+        if (isEmpty(hmacKeys))
             throw new IllegalStateException("Keys for signing JWS tokens cannot be empty!");
 
         List<JWK> keys = new ArrayList<>();
@@ -97,6 +99,4 @@ public class JwtConfiguration {
 
         return jwtProcessor;
     }
-
-
 }
